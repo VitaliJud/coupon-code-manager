@@ -31,3 +31,5 @@ To get the app running locally, follow these instructions:
 10. Start your dev environment in a **separate** terminal from `ngrok`. If `ngrok` restarts, update callbacks in steps 4 and 7 with the new ngrok_id.
     - `npm run dev`
 11. [Install the app and launch.](https://developer.bigcommerce.com/api-docs/apps/quick-start#install-the-app)
+
+## Vercel Installation
