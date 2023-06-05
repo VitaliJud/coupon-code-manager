@@ -140,6 +140,8 @@ const Promotion = () => {
               onChange={() => handleCodeCheckboxChange(id)}
             />
           ),
+          headerProps: { style: { justifyContent: 'center' } },
+          cellProps: { style: { justifyContent: 'center' } },
         },
         { header: 'Coupon Code', hash: 'code', render: ({ code }) => renderCode(code) },
         { header: 'Created', hash: 'created', render: ({ created }) => renderDate(created) },
