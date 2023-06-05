@@ -45,23 +45,23 @@ const Promotion = () => {
 
   const renderDate = (date: string): ReactElement => <Text>{date}</Text> // TODO: Convert to datestring
 
-//   const handleCodeCheckboxChange = codeId => {
-//     setSelectedCodes(prevSelectedCodes => {
-//       if (prevSelectedCodes.includes(codeId)) {
-//         return prevSelectedCodes.filter(id => id !== codeId)
-//       } else {
-//         return [...prevSelectedCodes, codeId]
-//       }
-//     })
-//   }
-
-  const handleAllCodesCheckboxChange = () => {
-    if (selectedCodes.length === tableItems.length) {
-      setSelectedCodes([])
-    } else {
-      setSelectedCodes(tableItems.map(item => item.id))
-    }
+  const handleCodeCheckboxChange = codeId => {
+    setSelectedCodes(prevSelectedCodes => {
+      if (prevSelectedCodes.includes(codeId)) {
+        return prevSelectedCodes.filter(id => id !== codeId)
+      } else {
+        return [...prevSelectedCodes, codeId]
+      }
+    })
   }
+
+//   const handleAllCodesCheckboxChange = () => {
+//     if (selectedCodes.length === tableItems.length) {
+//       setSelectedCodes([])
+//     } else {
+//       setSelectedCodes(tableItems.map(item => item.id))
+//     }
+//   }
 
   const handleDeleteSelected = () => {
     if (window.confirm('Are you sure you want to delete the selected codes?')) {
