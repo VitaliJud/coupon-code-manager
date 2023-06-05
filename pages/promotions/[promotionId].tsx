@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox Flex, Panel, Small, Link as StyledLink, Table, Text } from '@bigcommerce/big-design'
+import { Box, Button, Checkbox, Flex, Panel, Small, Link as StyledLink, Table, Text } from '@bigcommerce/big-design'
 import { AddIcon, ArrowDownwardIcon } from '@bigcommerce/big-design-icons'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
