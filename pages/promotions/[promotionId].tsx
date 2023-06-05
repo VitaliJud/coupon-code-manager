@@ -54,11 +54,6 @@ const Promotion = () => {
       }
     })
   }
-  
-  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { checked, name: formName } = event?.target;
-        setForm(prevForm => ({ ...prevForm, [formName]: checked }));
-    };
 
   const handleAllCodesCheckboxChange = () => {
     if (selectedCodes.length === tableItems.length) {
