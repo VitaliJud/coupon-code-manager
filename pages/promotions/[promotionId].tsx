@@ -1,5 +1,3 @@
-Edited v1
-
 import { Box, Button, Flex, Panel, Small, Link as StyledLink, Table, Text } from '@bigcommerce/big-design'
 import { AddIcon, ArrowDownwardIcon } from '@bigcommerce/big-design-icons'
 import Link from 'next/link'
