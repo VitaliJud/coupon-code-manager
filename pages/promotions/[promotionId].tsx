@@ -154,6 +154,7 @@ const Promotion = () => {
             hash: 'delete',
             render: ({ id }) => (
               <Checkbox
+                label="Delete"
                 checked={selectedCodes.includes(id)}
                 onChange={() => handleCodeCheckboxChange(id)}
               />
