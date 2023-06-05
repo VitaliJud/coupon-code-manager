@@ -1,3 +1,5 @@
+Edited v1
+
 import { Box, Button, Flex, Panel, Small, Link as StyledLink, Table, Text } from '@bigcommerce/big-design'
 import { AddIcon, ArrowDownwardIcon } from '@bigcommerce/big-design-icons'
 import Link from 'next/link'
@@ -93,74 +95,74 @@ const Promotion = () => {
   if (error) return <ErrorMessage error={error} />
 
   return (
-    <Panel header="Coupon Codes">
-      {generating && (
-        <CodeGeneratorModal
-          promotionId={promotionId}
-          onClose={() => {
-            setGenerating(false)
-            mutateList()
-          }}
-        />
-      )}
-      {exporting && (
-        <ExportCodesModal promotionId={promotionId} onClose={() => setExporting(false)} />
-      )}
-      <Flex justifyContent="space-between">
-        <Box>
-          <Link href="/">
-            <StyledLink>{'<- Back to Promotions'}</StyledLink>
-          </Link>
-        </Box>
-        <Box>
-          <Button iconLeft={<ArrowDownwardIcon />} onClick={() => setExporting(true)}>
-            Export Coupons
-          </Button>
-          <Button iconLeft={<AddIcon />} onClick={() => setGenerating(true)}>
-            Generate Coupons
-          </Button>
-          <Button onClick={handleDeleteSelected}>Delete Selected</Button>
-        </Box>
-      </Flex>
-      <Table
-        columns={[
-          {
-            header: (
-              <input
-                type="checkbox"
-                checked={selectedCodes.length === tableItems.length}
-                onChange={handleAllCodesCheckboxChange}
-              />
-            ),
-            hash: 'checkbox',
-            render: ({ id }) => (
-              <input
-                type="checkbox"
-                checked={selectedCodes.includes(id)}
-                onChange={() => handleCodeCheckboxChange(id)}
-              />
-            ),
-          },
-          { header: 'Coupon Code', hash: 'code', render: ({ code }) => renderCode(code) },
-          { header: 'Created', hash: 'created', render: ({ created }) => renderDate(created) },
-          { header: 'Current Uses', hash: 'current_uses', render: ({ current_uses }) => renderCurrentUses(current_uses) },
-          { header: 'Max Uses', hash: 'max_uses', render: ({ max_uses }) => renderMaxUses(max_uses) },
-          { header: 'Max Uses Per Customer', hash: 'max_uses_per_customer', render: ({ max_uses_per_customer }) => renderMaxUses(max_uses_per_customer) },
-        ]}
-        items={tableItems}
-        itemName="Coupon Codes"
-        pagination={{
-          currentPage,
-          totalItems: meta.pagination?.total,
-          onPageChange: setCurrentPage,
-          itemsPerPageOptions,
-          onItemsPerPageChange,
-          itemsPerPage,
+  <Panel header="Coupon Codes">
+    {generating && (
+      <CodeGeneratorModal
+        promotionId={promotionId}
+        onClose={() => {
+          setGenerating(false);
+          mutateList();
         }}
-        stickyHeader
-      ></Table>
-    </Panel>
-  )
-}
+      />
+    )}
+    {exporting && (
+      <ExportCodesModal promotionId={promotionId} onClose={() => setExporting(false)} />
+    )}
+    <Flex justifyContent="space-between">
+      <Box>
+        <Link href="/">
+          <StyledLink>{'<- Back to Promotions'}</StyledLink>
+        </Link>
+      </Box>
+      <Box>
+        <Button iconLeft={<ArrowDownwardIcon />} onClick={() => setExporting(true)}>
+          Export Coupons
+        </Button>
+        <Button iconLeft={<AddIcon />} onClick={() => setGenerating(true)}>
+          Generate Coupons
+        </Button>
+        <Button onClick={handleDeleteSelected}>Delete Selected</Button>
+      </Box>
+    </Flex>
+    <Table
+      columns={[
+        {
+          header: (
+            <input
+              type="checkbox"
+              checked={selectedCodes.length === tableItems.length}
+              onChange={handleAllCodesCheckboxChange}
+            />
+          ),
+          hash: 'checkbox',
+          render: ({ id }) => (
+            <input
+              type="checkbox"
+              checked={selectedCodes.includes(id)}
+              onChange={() => handleCodeCheckboxChange(id)}
+            />
+          ),
+        },
+        { header: 'Coupon Code', hash: 'code', render: ({ code }) => renderCode(code) },
+        { header: 'Created', hash: 'created', render: ({ created }) => renderDate(created) },
+        { header: 'Current Uses', hash: 'current_uses', render: ({ current_uses }) => renderCurrentUses(current_uses) },
+        { header: 'Max Uses', hash: 'max_uses', render: ({ max_uses }) => renderMaxUses(max_uses) },
+        { header: 'Max Uses Per Customer', hash: 'max_uses_per_customer', render: ({ max_uses_per_customer }) => renderMaxUses(max_uses_per_customer) },
+      ]}
+      items={tableItems}
+      itemName="Coupon Codes"
+      pagination={{
+        currentPage,
+        totalItems: meta.pagination?.total,
+        onPageChange: setCurrentPage,
+        itemsPerPageOptions,
+        onItemsPerPageChange,
+        itemsPerPage,
+      }}
+      stickyHeader
+    />
+  </Panel>
+);
+
 
 export default Promotion
