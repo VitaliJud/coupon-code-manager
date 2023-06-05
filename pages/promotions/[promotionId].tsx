@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, Flex, Panel, Small, Link as StyledLink, Table, T
 import { AddIcon, ArrowDownwardIcon } from '@bigcommerce/big-design-icons'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { ChangeEvent, ReactElement, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import CodeGeneratorModal from '@components/codeGeneratorModal'
 import ExportCodesModal from '@components/exportCodesModal'
 import { CouponListItem } from '@types'
@@ -45,15 +45,15 @@ const Promotion = () => {
 
   const renderDate = (date: string): ReactElement => <Text>{date}</Text> // TODO: Convert to datestring
 
-  const handleCodeCheckboxChange = codeId => {
-    setSelectedCodes(prevSelectedCodes => {
-      if (prevSelectedCodes.includes(codeId)) {
-        return prevSelectedCodes.filter(id => id !== codeId)
-      } else {
-        return [...prevSelectedCodes, codeId]
-      }
-    })
-  }
+//   const handleCodeCheckboxChange = codeId => {
+//     setSelectedCodes(prevSelectedCodes => {
+//       if (prevSelectedCodes.includes(codeId)) {
+//         return prevSelectedCodes.filter(id => id !== codeId)
+//       } else {
+//         return [...prevSelectedCodes, codeId]
+//       }
+//     })
+//   }
 
   const handleAllCodesCheckboxChange = () => {
     if (selectedCodes.length === tableItems.length) {
