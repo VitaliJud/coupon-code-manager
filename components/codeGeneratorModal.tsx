@@ -12,10 +12,10 @@ interface codeGeneratorModalProps {
 const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): ReactElement => {
     const encodedContext = useSession()?.context;
     const steps = ["Configure Codes", "Generate Codes", "Download Results"]
-    const [quantity, setQuantity] = useState(1000);
+    const [quantity, setQuantity] = useState(69);
     const [prefix, setPrefix] = useState("");
     const [suffix, setSuffix] = useState("");
-    const [length, setLength] = useState(12);
+    const [length, setLength] = useState(6);
     const [maxUses, setMaxUses] = useState(0);
     const [maxUsesPerCustomer, setMaxUsesPerCustomer] = useState(0);
     const [abortController] = useState(new AbortController());
@@ -160,7 +160,7 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
                                 value={length}
                                 onCountChange={setLength}
                                 label="Length"
-                                description="The number of characters in the code after the prefix and suffix."
+                                description="Additional number of characters."
                                 required={true}
                             />
                         </FormGroup>
