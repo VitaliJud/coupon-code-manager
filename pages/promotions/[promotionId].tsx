@@ -159,7 +159,6 @@ const Promotion = () => {
                 onChange={() => handleCodeCheckboxChange(id)}
               />
             ),
-            headerProps: { style: { textAlign: 'center' } },
           },
         ]}
         items={tableItems}
