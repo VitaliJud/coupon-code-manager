@@ -2,11 +2,15 @@ import { Box, Counter, Form, FormGroup, Input, InputProps, Message, Modal, Modal
 import { ReactElement, useState } from 'react';
 import { makeDataUrl } from '@lib/util';
 import { useSession } from '../context/session'
-import { generateCodes } from '../lib/coupons'
+import { generateCodes } from '../lib/coupons' // TODO: Duplicate code handling with makeCode
 
 interface codeGeneratorModalProps {
     promotionId: number,
     onClose: () => void,
+}
+
+interface CustomMessageLinkItem extends MessageLinkItem {
+    download: string;
 }
 
 const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): ReactElement => {
@@ -23,7 +27,7 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
     const [currentStep, setCurrentStep] = useState(0);
     const [timestamp, setTimestamp] = useState(Date.now());
     const maxCouponCodeLength = 50;
-    const [toggleOption, setToggleOption] = useState('both');
+    const [toggleOption, setToggleOption] = useState("both");
 
     const handlePrefixChange: InputProps['onChange'] = (event) => {
         setPrefix(event.target.value);
@@ -33,19 +37,15 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
         setSuffix(event.target.value);
     }
 
-    const handleToggleOptionChange: InputProps['onChange'] = (event) => {
-        setToggleOption(event.target.value);
-    }
-
     const handleClose = () => {
-        abortController.abort();
-        onClose();
+        abortController.abort()
+        onClose()
     }
 
     const handleCancel = () => {
-        if (confirm('Stop generating coupons?')) {
-            abortController.abort();
-            setCurrentStep(2);
+        if (confirm('Stop generating coupons?')) { // TODO: REIMPLEMENT
+            abortController.abort()
+            setCurrentStep(2)
         }
     }
 
@@ -62,35 +62,36 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
         })
 
         if (response.ok) {
-            const body = await response.json();
-            return body.data;
+            const body = await response.json()
+
+            return body.data
         }
     }
 
     const handleStart = async () => {
         try {
-            setTimestamp(Date.now());
-            setCurrentStep(1);
-            const signal = abortController.signal;
+            setTimestamp(Date.now())
+            setCurrentStep(1)
+            const signal = abortController.signal
 
-            const codes = generateCodes(quantity, length, prefix, suffix);
+            const codes = generateCodes(quantity, length, prefix, suffix)
 
             for (const code of codes) {
                 if (signal.aborted) {
-                    return;
+                    return
                 }
-                const coupon = await postCoupon(code, signal);
-                setCoupons(prevCoupons => prevCoupons.concat(coupon));
+                const coupon = await postCoupon(code, signal)
+                setCoupons(prevCoupons => prevCoupons.concat(coupon))
             }
 
-            setCurrentStep(2);
+            setCurrentStep(2)
 
         } catch (error) {
             if (error.message !== "The user aborted a request.") {
-                console.error(error);
+                console.error(error)
             }
 
-            setCurrentStep(2);
+            setCurrentStep(2)
         }
     }
 
@@ -114,11 +115,11 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
 
     const renderOnModalClose = () => {
         if (currentStep === 0 || currentStep === 2) {
-            return handleClose;
+            return handleClose
         }
 
         if (currentStep === 1) {
-            return handleCancel;
+            return handleCancel
         }
     }
 
@@ -129,63 +130,24 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
                     <Form>
                         <Box marginBottom='medium'>
                             <FormGroup>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="prefix"
-                                        checked={toggleOption === 'prefix'}
-                                        onChange={handleToggleOptionChange}
-                                    />
-                                    Prefix Only
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="suffix"
-                                        checked={toggleOption === 'suffix'}
-                                        onChange={handleToggleOptionChange}
-                                    />
-                                    Suffix Only
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="both"
-                                        checked={toggleOption === 'both'}
-                                        onChange={handleToggleOptionChange}
-                                    />
-                                    Both Prefix and Suffix
-                                </label>
+                                <Input
+                                    description={`A string to Prefix all coupon codes. Max length of codes + prefix + suffix is ${maxCouponCodeLength}`}
+                                    label="Prefix"
+                                    onChange={handlePrefixChange}
+                                    type="text"
+                                    value={prefix}
+                                    maxLength={maxCouponCodeLength - length}
+                                />
+                                <Input
+                                    description={`A string to Suffix all coupon codes. Max length of codes + prefix + suffix is ${maxCouponCodeLength}`}
+                                    label="Suffix"
+                                    onChange={handleSuffixChange}
+                                    type="text"
+                                    value={suffix}
+                                    maxLength={maxCouponCodeLength - length}
+                                />
                             </FormGroup>
                         </Box>
-                        {toggleOption === 'prefix' || toggleOption === 'both' ? (
-                            <Box marginBottom='medium'>
-                                <FormGroup>
-                                    <Input
-                                        description={`A string to Prefix all coupon codes. Max length of codes + prefix + suffix is ${maxCouponCodeLength}`}
-                                        label="Prefix"
-                                        onChange={handlePrefixChange}
-                                        type="text"
-                                        value={prefix}
-                                        maxLength={maxCouponCodeLength - length}
-                                    />
-                                </FormGroup>
-                            </Box>
-                        ) : null}
-                        {toggleOption === 'suffix' || toggleOption === 'both' ? (
-                            <Box marginBottom='medium'>
-                                <FormGroup>
-                                    <Input
-                                        description={`A string to Suffix all coupon codes. Max length of codes + prefix + suffix is ${maxCouponCodeLength}`}
-                                        label="Suffix"
-                                        onChange={handleSuffixChange}
-                                        type="text"
-                                        value={suffix}
-                                        maxLength={maxCouponCodeLength - length}
-                                    />
-                                </FormGroup>
-                            </Box>
-                        ) : null}
                         <Box marginBottom='medium'>
                             <FormGroup>
                                 <Counter
@@ -231,7 +193,7 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
                             </FormGroup>
                         </Box>
                     </Form>
-                )
+                );
             case 1:
                 return (
                     <Box marginVertical={"large"}>
@@ -239,7 +201,7 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
                         <ProgressBar percent={(coupons.length / quantity) * 100} />
                         <Message type="warning" messages={[{ text: 'Navigating away from this page will stop this process' }]} marginVertical="medium" />
                     </Box>
-                )
+                );
             case 2:
                 return (
                     <>
@@ -252,12 +214,12 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
                                         text: 'Download coupon codes',
                                         href: makeDataUrl(coupons),
                                         download: `coupon-codes-${timestamp}.csv`
-                                    }
+                                    } as CustomMessageLinkItem
                                 }
                             ]}
                         />
                     </>
-                )
+                );
         }
     }
 
@@ -267,13 +229,11 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
             actions={renderActions()}
             header="Generate Coupons"
             onClose={renderOnModalClose()}
-            closeOnClickOutside={false}
-            closeOnEscKey={false}
         >
             <Stepper steps={steps} currentStep={currentStep} />
             {renderContent()}
         </Modal>
-    )
+    );
 }
 
 export default CodeGeneratorModal;
