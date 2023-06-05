@@ -142,7 +142,7 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
                                 required={true}
                             />
                             <Counter
-                                min={6}
+                                min={1}
                                 max={maxCouponCodeLength - prefix.length}
                                 value={length}
                                 onCountChange={setLength}
