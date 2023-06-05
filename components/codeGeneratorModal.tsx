@@ -12,9 +12,10 @@ interface codeGeneratorModalProps {
 const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): ReactElement => {
     const encodedContext = useSession()?.context;
     const steps = ["Configure Codes", "Generate Codes", "Download Results"]
-    const [quantity, setQuantity] = useState(1000);
+    const [quantity, setQuantity] = useState(69);
     const [prefix, setPrefix] = useState("");
-    const [length, setLength] = useState(12);
+    const [suffix, setSuffix] = useState("");
+    const [length, setLength] = useState(6);
     const [maxUses, setMaxUses] = useState(0);
     const [maxUsesPerCustomer, setMaxUsesPerCustomer] = useState(0);
     const [abortController] = useState(new AbortController());
@@ -25,6 +26,10 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
 
     const handlePrefixChange: InputProps['onChange'] = (event) => {
         setPrefix(event.target.value)
+    }
+    
+    const handleSuffixChange: InputProps['onChange'] = (event) => {
+        setSuffix(event.target.value)
     }
 
     const handleClose = () => {
@@ -64,7 +69,7 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
             setCurrentStep(1)
             const signal = abortController.signal
 
-            const codes = generateCodes(quantity, length, prefix)
+            const codes = generateCodes(quantity, length, prefix, suffix)
 
             for (const code of codes) {
                 if(signal.aborted)
@@ -121,11 +126,19 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
                     <Box marginBottom='medium'>
                         <FormGroup>
                             <Input
-                                description={`A string to prefix all coupon codes. Max length of codes + prefix is ${maxCouponCodeLength}`}
+                                description={`A string to Prefix all coupon codes. Max length of codes + prefix + suffix is ${maxCouponCodeLength}`}
                                 label="Prefix"
                                 onChange={handlePrefixChange}
                                 type="text"
                                 value={prefix}
+                                maxLength={maxCouponCodeLength - length}
+                            />
+                            <Input
+                                description={`A string to Suffix all coupon codes. Max length of codes + prefix + suffix is ${maxCouponCodeLength}`}
+                                label="Suffix"
+                                onChange={handleSuffixChange}
+                                type="text"
+                                value={suffix}
                                 maxLength={maxCouponCodeLength - length}
                             />
                         </FormGroup>
@@ -142,12 +155,12 @@ const CodeGeneratorModal = ({ promotionId, onClose }: codeGeneratorModalProps): 
                                 required={true}
                             />
                             <Counter
-                                min={6}
-                                max={maxCouponCodeLength - prefix.length}
+                                min={1}
+                                max={maxCouponCodeLength - prefix.length - suffix.length}
                                 value={length}
                                 onCountChange={setLength}
                                 label="Length"
-                                description="The number of characters in the code after the prefix."
+                                description="Additional number of characters."
                                 required={true}
                             />
                         </FormGroup>
