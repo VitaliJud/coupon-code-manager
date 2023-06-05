@@ -9,6 +9,7 @@ import { CouponListItem } from '@types'
 import ErrorMessage from '../../components/error'
 import Loading from '../../components/loading'
 import { useCodes } from '../../lib/hooks'
+import { Checkbox } from '@bigcommerce/big-design'
 
 const Promotion = () => {
   const router = useRouter()
@@ -125,23 +126,16 @@ const Promotion = () => {
     <Table
       columns={[
         {
-          header: (
-            <input
-              type="checkbox"
-              checked={selectedCodes.length === tableItems.length}
-              onChange={handleAllCodesCheckboxChange}
-            />
-          ),
+          header: ' ',
           hash: 'checkbox',
           render: ({ id }) => (
-            <input
-              type="checkbox"
+            <Checkbox
               checked={selectedCodes.includes(id)}
               onChange={() => handleCodeCheckboxChange(id)}
             />
           ),
-          headerProps: { style: { justifyContent: 'center' } },
-          cellProps: { style: { justifyContent: 'center' } },
+          headerProps: { style: { textAlign: 'center' } },
+          cellProps: { style: { textAlign: 'center' } },
         },
         { header: 'Coupon Code', hash: 'code', render: ({ code }) => renderCode(code) },
         { header: 'Created', hash: 'created', render: ({ created }) => renderDate(created) },
