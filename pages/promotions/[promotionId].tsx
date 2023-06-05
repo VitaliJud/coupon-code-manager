@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, Flex, Panel, Small, Link as StyledLink, Table, T
 import { AddIcon, ArrowDownwardIcon } from '@bigcommerce/big-design-icons'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactElement, useState } from 'react'
+import React, { ChangeEvent, ReactElement, useState } from 'react'
 import CodeGeneratorModal from '@components/codeGeneratorModal'
 import ExportCodesModal from '@components/exportCodesModal'
 import { CouponListItem } from '@types'
@@ -129,11 +129,48 @@ const Promotion = () => {
       </Flex>
       <Table
         columns={[
-          { header: 'Coupon Code', hash: 'code', render: ({ code }) => renderCode(code) },
-          { header: 'Created', hash: 'created', render: ({ created }) => renderDate(created) },
-          { header: 'Current Uses', hash: 'current_uses', render: ({ current_uses }) => renderCurrentUses(current_uses) },
-          { header: 'Max Uses', hash: 'max_uses', render: ({ max_uses }) => renderMaxUses(max_uses) },
-          { header: 'Max Uses Per Customer', hash: 'max_uses_per_customer', render: ({ max_uses_per_customer }) => renderMaxUses(max_uses_per_customer) },
+          {
+            header: 'Coupon Code',
+            hash: 'code',
+            render: ({ code }) => renderCode(code),
+            cellProps: { style: { textAlign: 'center' } },
+          },
+          {
+            header: 'Created',
+            hash: 'created',
+            render: ({ created }) => renderDate(created),
+            cellProps: { style: { textAlign: 'center' } },
+          },
+          {
+            header: 'Current Uses',
+            hash: 'current_uses',
+            render: ({ current_uses }) => renderCurrentUses(current_uses),
+            cellProps: { style: { textAlign: 'center' } },
+          },
+          {
+            header: 'Max Uses',
+            hash: 'max_uses',
+            render: ({ max_uses }) => renderMaxUses(max_uses),
+            cellProps: { style: { textAlign: 'center' } },
+          },
+          {
+            header: 'Max Uses Per Customer',
+            hash: 'max_uses_per_customer',
+            render: ({ max_uses_per_customer }) => renderMaxUses(max_uses_per_customer),
+            cellProps: { style: { textAlign: 'center' } },
+          },
+          {
+            header: 'Delete',
+            hash: 'delete',
+            render: ({ id }) => (
+              <Checkbox
+                checked={selectedCodes.includes(id)}
+                onChange={() => handleCodeCheckboxChange(id)}
+              />
+            ),
+            headerProps: { style: { textAlign: 'center' } },
+            cellProps: { style: { textAlign: 'center' } },
+          },
         ]}
         items={tableItems}
         pagination={{
