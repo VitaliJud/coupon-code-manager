@@ -128,31 +128,26 @@ const Promotion = () => {
             header: 'Coupon Code',
             hash: 'code',
             render: ({ code }) => renderCode(code),
-            cellProps: { style: { textAlign: 'center' } },
           },
           {
             header: 'Created',
             hash: 'created',
             render: ({ created }) => renderDate(created),
-            cellProps: { style: { textAlign: 'center' } },
           },
           {
             header: 'Current Uses',
             hash: 'current_uses',
             render: ({ current_uses }) => renderCurrentUses(current_uses),
-            cellProps: { style: { textAlign: 'center' } },
           },
           {
             header: 'Max Uses',
             hash: 'max_uses',
             render: ({ max_uses }) => renderMaxUses(max_uses),
-            cellProps: { style: { textAlign: 'center' } },
           },
           {
             header: 'Max Uses Per Customer',
             hash: 'max_uses_per_customer',
             render: ({ max_uses_per_customer }) => renderMaxUses(max_uses_per_customer),
-            cellProps: { style: { textAlign: 'center' } },
           },
           {
             header: 'Delete',
@@ -164,7 +159,6 @@ const Promotion = () => {
               />
             ),
             headerProps: { style: { textAlign: 'center' } },
-            cellProps: { style: { textAlign: 'center' } },
           },
         ]}
         items={tableItems}
