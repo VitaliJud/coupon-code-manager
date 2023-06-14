@@ -64,30 +64,36 @@ const Promotion = () => {
 //   }
 
   const handleDeleteSelected = () => {
-    if (window.confirm('Are you sure you want to delete the selected codes?')) {
-      const deletionPromises = selectedCodes.map(codeId => {
-        return fetch(`/api/promotions/${promotionId}/codes?id:in=${codeId}`, { method: 'DELETE' })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`Error deleting code with ID ${codeId}`)
-            }
-          })
+  if (window.confirm('Are you sure you want to delete the selected codes?')) {
+    const deletionPromises = selectedCodes.map(codeId => {
+      return fetch(`/api/promotions/${promotionId}/codes`, {
+        method: 'POST',
+        body: JSON.stringify({ codeId }), // Pass codeId as a parameter in the request body
+        headers: {
+          'Content-Type': 'application/json',
+        },
       })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error deleting code with ID ${codeId}`)
+          }
+        })
+    })
 
-      Promise.all(deletionPromises)
-        .then(() => {
-          setSelectedCodes([])
-          // Show a success message
-          alert('Selected codes deleted successfully!')
-        })
-        .catch(error => {
-          // Handle any errors
-          console.error('Error deleting codes:', error)
-          // Show an error message
-          alert('Error deleting codes. Please try again.')
-        })
-    }
+    Promise.all(deletionPromises)
+      .then(() => {
+        setSelectedCodes([])
+        // Show a success message
+        alert('Selected codes deleted successfully!')
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error('Error deleting codes:', error)
+        // Show an error message
+        alert('Error deleting codes. Please try again.')
+      })
   }
+}
 
   if (isLoading) return <Loading />
   if (error) return <ErrorMessage error={error} />
