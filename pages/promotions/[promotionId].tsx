@@ -9,6 +9,7 @@ import { CouponListItem } from '@types'
 import ErrorMessage from '../../components/error'
 import Loading from '../../components/loading'
 import { useCodes } from '../../lib/hooks'
+import { useSession } from '../context/session' // Import the useSession hook
 
 const Promotion = () => {
   const router = useRouter()
@@ -55,45 +56,46 @@ const Promotion = () => {
     })
   }
 
-//   const handleAllCodesCheckboxChange = () => {
-//     if (selectedCodes.length === tableItems.length) {
-//       setSelectedCodes([])
-//     } else {
-//       setSelectedCodes(tableItems.map(item => item.id))
-//     }
-//   }
-
   const handleDeleteSelected = () => {
-  if (window.confirm('Are you sure you want to delete the selected codes?')) {
-    const deletionPromises = selectedCodes.map(codeId => {
-      return fetch(`/api/promotions/${promotionId}/codes`, {
-        method: 'POST',
-        body: JSON.stringify({ codeId }), // Pass codeId as a parameter in the request body
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Error deleting code with ID ${codeId}`)
-          }
-        })
-    })
+    if (window.confirm('Are you sure you want to delete the selected codes?')) {
+      const encodedContext = useSession()?.context; // Get the JWT from the session context
 
-    Promise.all(deletionPromises)
-      .then(() => {
-        setSelectedCodes([])
-        // Show a success message
-        alert('Selected codes deleted successfully!')
+      const deletionPromises = selectedCodes.map(codeId => {
+        return fetch(`/api/promotions/${promotionId}/codes?context=${encodedContext}`, {
+          method: 'POST',
+          body: JSON.stringify({ codeId }), // Pass codeId as a parameter in the request body
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`Error deleting code with ID ${codeId}`)
+            }
+          })
       })
-      .catch(error => {
-        // Handle any errors
-        console.error('Error deleting codes:', error)
-        // Show an error message
-        alert('Error deleting codes. Please try again.')
-      })
+
+      Promise.all(deletionPromises)
+        .then(() => {
+          setSelectedCodes([])
+          // Show a success message
+          alert('Selected codes deleted successfully!')
+        })
+        .catch(error => {
+          // Handle any errors
+          console.error('Error deleting codes:', error)
+          // Show an error message
+          alert('Error deleting codes. Please try again.')
+        })
+    }
   }
-}
+
+  const session = useSession(); // Get the session from the session context
+
+  if (!session?.authenticated) {
+    router.push('/login'); // Redirect if the session is not authenticated
+    return null; // Return null until the redirect happens
+  }
 
   if (isLoading) return <Loading />
   if (error) return <ErrorMessage error={error} />
