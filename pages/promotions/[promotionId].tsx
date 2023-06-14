@@ -68,7 +68,7 @@ const Promotion = () => {
     if (window.confirm('Are you sure you want to delete the selected codes?')) {
       const deletionPromises = selectedCodes.map(codeId => {
         return fetch(`/api/promotions/${promotionId}/codes?id:in=${codeId}&context=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZXh0IjoidngxbnJjaXVhYyIsInVzZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIiwibG9jYWxlIjoiZW4ifSwib3duZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIn0sImlhdCI6MTY4Njc3Nzc1MiwiZXhwIjoxNjg2ODY0MTUyfQ.D8XnF9N75xWYfhvb5KYrmCvW0CfsPjXbsLMjf8PyRsg`,
-                     { method: 'GET'})
+                     { method: 'DELETE'})
           .then(response => {
             if (!response.ok) {
               throw new Error(`Error deleting code with ID ${codeId}`);
