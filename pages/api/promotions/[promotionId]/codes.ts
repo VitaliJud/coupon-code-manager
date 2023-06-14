@@ -26,7 +26,7 @@ export default async function codes(req: NextApiRequest, res: NextApiResponse) {
             const { accessToken, storeHash } = await getSession(req);
             const bigcommerce = bigcommerceClient(accessToken, storeHash, 'v3');
             
-            const response = await bigcommerce.delete(`/promotions/${promotionId}/codes?id:in=${codeId}`) // Update the endpoint with codeId as a query parameter
+            const response = await bigcommerce.delete(`/promotions/${promotionId}/codes/${codeId}`) // Update the endpoint with codeId as a query parameter
             res.status(204).json(response)
         } else {
             res.status(405).send('Method Not Allowed')
