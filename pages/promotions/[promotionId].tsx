@@ -9,7 +9,7 @@ import { CouponListItem } from '@types';
 import ErrorMessage from '../../components/error';
 import Loading from '../../components/loading';
 import { useCodes } from '../../lib/hooks';
-import { useSession } from '../context/session'; // Import the useSession hook
+// import { useSession } from '../context/session'; // Import the useSession hook
 
 const Promotion = () => {
   const router = useRouter();
@@ -66,10 +66,10 @@ const Promotion = () => {
   
   const handleDeleteSelected = () => {
     if (window.confirm('Are you sure you want to delete the selected codes?')) {
-      const encodedContext = useSession()?.context; // Retrieve the encoded context using the useSession hook
+    //  const encodedContext = useSession()?.context; // Retrieve the encoded context using the useSession hook
 
       const deletionPromises = selectedCodes.map(codeId => {
-        return fetch(`/api/promotions/${promotionId}/codes?context=${encodedContext}`, {
+        return fetch(`/api/promotions/${promotionId}/codes?context=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZXh0IjoidngxbnJjaXVhYyIsInVzZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIiwibG9jYWxlIjoiZW4ifSwib3duZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIn0sImlhdCI6MTY4Njc3Nzc1MiwiZXhwIjoxNjg2ODY0MTUyfQ.D8XnF9N75xWYfhvb5KYrmCvW0CfsPjXbsLMjf8PyRsg`, {
           method: 'POST',
           body: JSON.stringify({ codeId }), // Pass codeId as a parameter in the request body
           headers: {
