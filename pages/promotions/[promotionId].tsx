@@ -1,29 +1,29 @@
-import { Box, Button, Checkbox, Flex, Panel, Small, Link as StyledLink, Table, Text } from '@bigcommerce/big-design'
-import { AddIcon, ArrowDownwardIcon } from '@bigcommerce/big-design-icons'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import React, { ReactElement, useState } from 'react'
-import CodeGeneratorModal from '@components/codeGeneratorModal'
-import ExportCodesModal from '@components/exportCodesModal'
-import { CouponListItem } from '@types'
-import ErrorMessage from '../../components/error'
-import Loading from '../../components/loading'
-import { useCodes } from '../../lib/hooks'
-import { useSession } from '../context/session' // Import the useSession hook
+import { Box, Button, Checkbox, Flex, Panel, Small, Link as StyledLink, Table, Text } from '@bigcommerce/big-design';
+import { AddIcon, ArrowDownwardIcon } from '@bigcommerce/big-design-icons';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { ReactElement, useState } from 'react';
+import CodeGeneratorModal from '@components/codeGeneratorModal';
+import ExportCodesModal from '@components/exportCodesModal';
+import { CouponListItem } from '@types';
+import ErrorMessage from '../../components/error';
+import Loading from '../../components/loading';
+import { useCodes } from '../../lib/hooks';
+import { useSession } from '../context/session'; // Import the useSession hook
 
 const Promotion = () => {
-  const router = useRouter()
-  const promotionId = Number(router.query?.promotionId)
-  const [itemsPerPage, setItemsPerPage] = useState(10)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [generating, setGenerating] = useState(false)
-  const [exporting, setExporting] = useState(false)
-  const [selectedCodes, setSelectedCodes] = useState([])
+  const router = useRouter();
+  const promotionId = Number(router.query?.promotionId);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [generating, setGenerating] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [selectedCodes, setSelectedCodes] = useState([]);
   const { error, isLoading, list = [], meta = {}, mutateList } = useCodes(promotionId, {
     page: String(currentPage),
     limit: String(itemsPerPage),
-  })
-  const itemsPerPageOptions = [10, 20, 50, 100, 250]
+  });
+  const itemsPerPageOptions = [10, 20, 50, 100, 250];
   const tableItems: CouponListItem[] = list.map(({ id, code, max_uses, max_uses_per_customer, current_uses, created }) => ({
     id,
     code,
@@ -31,34 +31,42 @@ const Promotion = () => {
     max_uses_per_customer,
     current_uses,
     created,
-  }))
+  }));
 
   const onItemsPerPageChange = newRange => {
-    setCurrentPage(1)
-    setItemsPerPage(newRange)
-  }
+    setCurrentPage(1);
+    setItemsPerPage(newRange);
+  };
 
-  const renderCode = (code: string): ReactElement => <Text>{code}</Text>
+  const renderCode = (code: string): ReactElement => <Text>{code}</Text>;
 
-  const renderCurrentUses = (uses: number): ReactElement => <Small>{uses}</Small>
+  const renderCurrentUses = (uses: number): ReactElement => <Small>{uses}</Small>;
 
-  const renderMaxUses = (uses: number): ReactElement => <Small>{uses ? uses : String.fromCharCode(0x221E)}</Small>
+  const renderMaxUses = (uses: number): ReactElement => <Small>{uses ? uses : String.fromCharCode(0x221E)}</Small>;
 
-  const renderDate = (date: string): ReactElement => <Text>{date}</Text> // TODO: Convert to datestring
+  const renderDate = (date: string): ReactElement => <Text>{date}</Text>; // TODO: Convert to datestring
 
   const handleCodeCheckboxChange = codeId => {
     setSelectedCodes(prevSelectedCodes => {
       if (prevSelectedCodes.includes(codeId)) {
-        return prevSelectedCodes.filter(id => id !== codeId)
+        return prevSelectedCodes.filter(id => id !== codeId);
       } else {
-        return [...prevSelectedCodes, codeId]
+        return [...prevSelectedCodes, codeId];
       }
-    })
-  }
+    });
+  };
 
+//   const handleAllCodesCheckboxChange = () => {
+//     if (selectedCodes.length === tableItems.length) {
+//       setSelectedCodes([])
+//     } else {
+//       setSelectedCodes(tableItems.map(item => item.id))
+//     }
+//   }
+  
   const handleDeleteSelected = () => {
     if (window.confirm('Are you sure you want to delete the selected codes?')) {
-      const encodedContext = useSession()?.context; // Get the JWT from the session context
+      const encodedContext = useSession()?.context; // Retrieve the encoded context using the useSession hook
 
       const deletionPromises = selectedCodes.map(codeId => {
         return fetch(`/api/promotions/${promotionId}/codes?context=${encodedContext}`, {
@@ -70,35 +78,28 @@ const Promotion = () => {
         })
           .then(response => {
             if (!response.ok) {
-              throw new Error(`Error deleting code with ID ${codeId}`)
+              throw new Error(`Error deleting code with ID ${codeId}`);
             }
-          })
-      })
+          });
+      });
 
       Promise.all(deletionPromises)
         .then(() => {
-          setSelectedCodes([])
+          setSelectedCodes([]);
           // Show a success message
-          alert('Selected codes deleted successfully!')
+          alert('Selected codes deleted successfully!');
         })
         .catch(error => {
           // Handle any errors
-          console.error('Error deleting codes:', error)
+          console.error('Error deleting codes:', error);
           // Show an error message
-          alert('Error deleting codes. Please try again.')
-        })
+          alert('Error deleting codes. Please try again.');
+        });
     }
-  }
+  };
 
-  const session = useSession(); // Get the session from the session context
-
-  if (!session?.authenticated) {
-    router.push('/login'); // Redirect if the session is not authenticated
-    return null; // Return null until the redirect happens
-  }
-
-  if (isLoading) return <Loading />
-  if (error) return <ErrorMessage error={error} />
+  if (isLoading) return <Loading />;
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <Panel header="Coupon Codes">
@@ -106,14 +107,12 @@ const Promotion = () => {
         <CodeGeneratorModal
           promotionId={promotionId}
           onClose={() => {
-            setGenerating(false)
-            mutateList()
+            setGenerating(false);
+            mutateList();
           }}
         />
       )}
-      {exporting && (
-        <ExportCodesModal promotionId={promotionId} onClose={() => setExporting(false)} />
-      )}
+      {exporting && <ExportCodesModal promotionId={promotionId} onClose={() => setExporting(false)} />}
       <Flex justifyContent="space-between">
         <Box>
           <Link href="/">
@@ -181,7 +180,7 @@ const Promotion = () => {
         stickyHeader
       ></Table>
     </Panel>
-  )
-}
+  );
+};
 
-export default Promotion
+export default Promotion;
