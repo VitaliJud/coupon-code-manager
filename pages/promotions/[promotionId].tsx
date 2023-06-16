@@ -68,7 +68,7 @@ const Promotion = () => {
   if (window.confirm('Are you sure you want to delete the selected codes?')) {
     const codeIds = selectedCodes.join(',');
 
-    const deletionPromises = fetch(`/api/promotions/${promotionId}/codes?codeId=${codeIds}&context=${encodedContext}`, {
+    const deletionPromises = fetch(`/api/promotions/${promotionId}/codes?codeId=${codeIds}&context=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZXh0IjoidngxbnJjaXVhYyIsInVzZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIiwibG9jYWxlIjoiZW4ifSwib3duZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIn0sImlhdCI6MTY4NjkyMDkwNSwiZXhwIjoxNjg3MDA3MzA1fQ.KL0mgLzVAxd4a8AedspYNazQtdmyxzjQI6sN_OS02KM`, {
       method: 'DELETE',
     })
       .then(response => {
