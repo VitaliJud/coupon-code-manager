@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { URLSearchParams } from "url";
 import { bigcommerceClient, getSession } from '../../../../lib/auth';
+import { pino } from 'pino'
 
 const logger = pino({
     transport: {
