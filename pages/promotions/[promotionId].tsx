@@ -65,33 +65,33 @@ const Promotion = () => {
 //   }
   
   const handleDeleteSelected = () => {
-  if (window.confirm('Are you sure you want to delete the selected codes?')) {
-    const codeIds = selectedCodes.join(',');
-
-    const deletionPromises = fetch(`/api/promotions/${promotionId}/codes?codeId=${codeIds}&context=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZXh0IjoidngxbnJjaXVhYyIsInVzZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIiwibG9jYWxlIjoiZW4ifSwib3duZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIn0sImlhdCI6MTY4NjkyMDkwNSwiZXhwIjoxNjg3MDA3MzA1fQ.KL0mgLzVAxd4a8AedspYNazQtdmyxzjQI6sN_OS02KM`, {
-      method: 'DELETE',
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error deleting codes');
-        }
-      })
-      .catch(error => {
-        console.error('Error deleting codes:', error);
-        alert('Error deleting codes. Please try again.');
+    if (window.confirm('Are you sure you want to delete the selected codes?')) {
+      const codeIds = selectedCodes.join(',');
+      
+      const deletionPromises = selectedCodes.map(codeId => {
+        return fetch(`/api/promotions/${promotionId}/codes?codeId=${codeIds}&context=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZXh0IjoidngxbnJjaXVhYyIsInVzZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIiwibG9jYWxlIjoiZW4ifSwib3duZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIn0sImlhdCI6MTY4NjkyMDkwNSwiZXhwIjoxNjg3MDA3MzA1fQ.KL0mgLzVAxd4a8AedspYNazQtdmyxzjQI6sN_OS02KM`,
+                     { method: 'DELETE'})
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`Error deleting code with ID ${codeId}`);
+            }
+          });
       });
 
-    deletionPromises
-      .then(() => {
-        setSelectedCodes([]);
-        alert('Selected codes deleted successfully!');
-      })
-      .catch(error => {
-        console.error('Error deleting codes:', error);
-        alert('Error deleting codes. Please try again.');
-      });
-  }
-};
+      Promise.all(deletionPromises)
+        .then(() => {
+          setSelectedCodes([]);
+          // Show a success message
+          alert('Selected codes deleted successfully!');
+        })
+        .catch(error => {
+          // Handle any errors
+          console.error('Error deleting codes:', error);
+          // Show an error message
+          alert('Error deleting codes. Please try again.');
+        });
+    }
+  };
 
   if (isLoading) return <Loading />;
   if (error) return <ErrorMessage error={error} />;
@@ -179,3 +179,4 @@ const Promotion = () => {
 };
 
 export default Promotion;
+
