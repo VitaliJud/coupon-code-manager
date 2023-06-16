@@ -2,6 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { URLSearchParams } from "url";
 import { bigcommerceClient, getSession } from '../../../../lib/auth';
 
+const logger = pino({
+    transport: {
+        target: 'pino-pretty',
+        options: { destination: 1 }
+    }
+})
+
 export default async function codes(req: NextApiRequest, res: NextApiResponse) {
     const {
         method,
@@ -26,8 +33,14 @@ export default async function codes(req: NextApiRequest, res: NextApiResponse) {
             const { accessToken, storeHash } = await getSession(req);
             const bigcommerce = bigcommerceClient(accessToken, storeHash, 'v3');
             
-            const response = await bigcommerce.delete(`/promotions/${promotionId}/codes/${codeId}`) // Update the endpoint with codeId as a query parameter
+            logger.info(`Code ID: ${codeId}`)
+            
+            const deleteEndpoint = `/promotions/${promotionId}/codes?id:in=${codeId}`
+            logger.info(`Current URL: ${deleteEndpoint}`)
+            
+            const response = await bigcommerce.delete(deleteEndpoint)
             res.status(204).json(response)
+            
         } else {
             res.status(405).send('Method Not Allowed')
         }
