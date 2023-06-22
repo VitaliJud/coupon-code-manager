@@ -69,7 +69,7 @@ const Promotion = () => {
       const codeIds = selectedCodes.join(',');
       
       const deletionPromises = selectedCodes.map(codeId => {
-        return fetch(`/api/promotions/${promotionId}/codes?codeId=${codeIds}&context=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZXh0IjoidngxbnJjaXVhYyIsInVzZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIiwibG9jYWxlIjoiZW4ifSwib3duZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIn0sImlhdCI6MTY4NzM2MjA1NywiZXhwIjoxNjg3NDQ4NDU3fQ.4MVkZez-Fr4bhOsw14rc0fCb9-FVj3M8qUYiDlqCUKY`,
+        return fetch(`/api/promotions/${promotionId}/codes?codeId=${codeIds}&context=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZXh0IjoidngxbnJjaXVhYyIsInVzZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIiwibG9jYWxlIjoiZW4ifSwib3duZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIn0sImlhdCI6MTY4NzQ0NzIwNiwiZXhwIjoxNjg3NTMzNjA2fQ.RBBx4-lk23hGroei2dQnI1rWgYdGc_e70HCAOwD_uVQ`,
                      { method: 'DELETE'})
           .then(response => {
             if (!response.ok) {
