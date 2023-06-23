@@ -68,7 +68,6 @@ const Promotion = () => {
   const handleDeleteSelected = () => {
     if (window.confirm('Are you sure you want to delete the selected codes?')) {
       const codeIds = selectedCodes.join(',');
-      const encodedContext = session?.context;
       
       const deletionPromises = selectedCodes.map(codeId => {
         return fetch(`/api/promotions/${promotionId}/codes?codeId=${codeIds}&context=${encodedContext}`,
