@@ -8,11 +8,12 @@ import ExportCodesModal from '@components/exportCodesModal';
 import { CouponListItem } from '@types';
 import ErrorMessage from '../../components/error';
 import Loading from '../../components/loading';
-import { useCodes } from '../../lib/hooks';
 import { useSession } from '../../context/session'; // Import the useSession hook
+import { useCodes } from '../../lib/hooks';
 
 const Promotion = () => {
   const router = useRouter();
+  const encodedContext = useSession()?.context;
   const promotionId = Number(router.query?.promotionId);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,7 +68,7 @@ const Promotion = () => {
   const handleDeleteSelected = () => {
     if (window.confirm('Are you sure you want to delete the selected codes?')) {
       const codeIds = selectedCodes.join(',');
-      const encodedContext = useSession()?.context;
+      const encodedContext = session?.context;
       
       const deletionPromises = selectedCodes.map(codeId => {
         return fetch(`/api/promotions/${promotionId}/codes?codeId=${codeIds}&context=${encodedContext}`,
