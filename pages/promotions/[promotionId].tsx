@@ -9,7 +9,7 @@ import { CouponListItem } from '@types';
 import ErrorMessage from '../../components/error';
 import Loading from '../../components/loading';
 import { useCodes } from '../../lib/hooks';
-// import { useSession } from '../context/session'; // Import the useSession hook
+import { useSession } from '../../context/session'; // Import the useSession hook
 
 const Promotion = () => {
   const router = useRouter();
@@ -67,9 +67,10 @@ const Promotion = () => {
   const handleDeleteSelected = () => {
     if (window.confirm('Are you sure you want to delete the selected codes?')) {
       const codeIds = selectedCodes.join(',');
+      const encodedContext = useSession()?.context;
       
       const deletionPromises = selectedCodes.map(codeId => {
-        return fetch(`/api/promotions/${promotionId}/codes?codeId=${codeIds}&context=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZXh0IjoidngxbnJjaXVhYyIsInVzZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIiwibG9jYWxlIjoiZW4ifSwib3duZXIiOnsiaWQiOjkxMTg3NSwiZW1haWwiOiJ2aXRhbGkuanVkaW5AYmlnY29tbWVyY2UuY29tIn0sImlhdCI6MTY4NzQ0NzIwNiwiZXhwIjoxNjg3NTMzNjA2fQ.RBBx4-lk23hGroei2dQnI1rWgYdGc_e70HCAOwD_uVQ`,
+        return fetch(`/api/promotions/${promotionId}/codes?codeId=${codeIds}&context=${encodedContext}`,
                      { method: 'DELETE'})
           .then(response => {
             if (!response.ok) {
