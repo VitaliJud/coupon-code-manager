@@ -26,8 +26,9 @@ To get BigCommerce App running for free using Cloud servers with Vercel and Fire
     - Add New Project > Disable Analytics > Create
     - Select All Products > Cloud Firestore > Get Started
     - Select Rules tab > adjust 'allow read, write: if `false`' to > '`true`'
+    - Select Authetication from All Products > Get Started
 8. Get Firebase credentials
-    - View Project Settings > General
+    - View Project Overview > Project Settings > General
     - Make note of variable `ProjectID` | `Web API Key` | `authDomain` - '{projectId}.firebaseapp.com'
 9. Update Vercel Environment Variables
     - FIRE_DOMAIN - authDomain in Firebase
