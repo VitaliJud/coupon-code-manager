@@ -28,7 +28,7 @@ const Index = () => {
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
   const [couponCode, setCouponCode] = useState('');
   const [loading, setLoading] = useState(false);
-  const [searchTableItems, setSearchTableItems] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const alertsManager = createAlertsManager();
 
   const { error, isLoading, list = [], meta = {} } = usePromotions({ // Removed 'list = []' parameter after 'isLoading'
@@ -94,7 +94,7 @@ const Index = () => {
       const url = `/api/promotions${query ? `?${query}` : ''}`;
       const res = await fetch(url);
       const { data } = await res.json();
-      setSearchTableItems(data);
+      setSearchResults(data);
 
       if (data.length === 0) {
           const alert = {
@@ -126,7 +126,7 @@ const Index = () => {
   setLoading(false);
 };
 
-
+  const displayItems = searchResults.length > 0 ? searchResults : list; // Use the 'list' for regular results
 
   if (isLoading) return <Loading />;
   if (error) return <ErrorMessage error={error} />;
@@ -157,7 +157,7 @@ const Index = () => {
           { header: 'Currency', hash: 'currency_code', render: ({ currency_code }) => renderCurrencyCode(currency_code) },
           { header: 'Status', hash: 'status', render: ({ status }) => renderStatus(status) },
         ]}
-        items={tableItems}
+        items={displayItems}
         itemName="Promotions"
         pagination={{
           currentPage,
