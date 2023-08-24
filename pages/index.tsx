@@ -84,38 +84,47 @@ const Index = () => {
   const handleSearch = async () => {
     setLoading(true);
     try {
-      if (!couponCode.trim()) {
-        return; // Prevent empty searches
-      }
+        let query = '';
 
-      const url = `/api/promotions?code=${couponCode}`;
-      const res = await fetch(url);
-      const { data } = await res.json();
+        if (couponCode) {
+            query = `code=${couponCode}`;
+        }
 
-      if (data.length === 0) {
+        const url = `/api/promotions${query ? `?${query}` : ''}`;
+        const res = await fetch(url);
+        const { data } = await res.json();
+        setCustomers(data);
+
+        if (data.length === 0) {
+            const alert = {
+                type: 'warning',
+                header: 'No results',
+                messages: [
+                    {
+                        text: `No results for ${couponCode}`,
+                    },
+                ],
+                autoDismiss: true,
+            } as AlertProps;
+            alertsManager.add(alert);
+        }
+    } catch (error) {
+        console.error(error);
         const alert = {
-          type: 'warning',
-          header: 'No results',
-          messages: [{ text: `No results for ${couponCode}` }],
-          autoDismiss: true,
+            type: 'error',
+            header: 'Error searching coupon code',
+            messages: [
+                {
+                    text: error.message,
+                },
+            ],
+            autoDismiss: true,
         } as AlertProps;
         alertsManager.add(alert);
-      }
-
-      // Update your table data or state with the search results
-
-    } catch (error) {
-      console.error(error);
-      const alert = {
-        type: 'error',
-        header: 'Error searching coupon code',
-        messages: [{ text: error.message }],
-        autoDismiss: true,
-      } as AlertProps;
-      alertsManager.add(alert);
     }
     setLoading(false);
-  };
+};
+
 
   if (isLoading) return <Loading />;
   if (error) return <ErrorMessage error={error} />;
