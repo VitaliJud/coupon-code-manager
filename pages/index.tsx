@@ -40,8 +40,8 @@ const Index = () => {
   const itemsPerPageOptions = [10, 20, 50, 100, 250];
 
   const tableItems: PromotionTableItem[] = list.map(
-    ({ id, name, current_uses, max_uses, status, start_date, end_date, currency_code }) => ({
-      id,
+    ({ id, name, current_uses, max_uses, status, start_date, end_date, currency_code }) => ({ // removed 'id'
+      id: id.toString(), 
       name,
       current_uses,
       max_uses,
@@ -149,7 +149,7 @@ const Index = () => {
       <AlertsManager manager={alertsManager} />
       <Table
         columns={[
-          { header: 'Promotion name', hash: 'name', render: ({ id, name }) => renderName(id, name), isSortable: true },
+          { header: 'Promotion name', hash: 'name', render: ({ id, name }) => renderName(id, name), isSortable: true }, // removed 'id' from the render and renderName
           { header: 'Start Date', hash: 'start_date', render: ({ start_date }) => renderDate(start_date), isSortable: true },
           { header: 'End Date', hash: 'end_date', render: ({ end_date }) => renderDate(end_date) },
           { header: 'Current Uses', hash: 'current_uses', render: ({ current_uses }) => renderCurrentUses(current_uses) },
