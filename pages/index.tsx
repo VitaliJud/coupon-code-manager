@@ -28,7 +28,7 @@ const Index = () => {
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
   const [couponCode, setCouponCode] = useState('');
   const [loading, setLoading] = useState(false);
-  // const [tableItems, setTableItems] = useState([]);
+  const [searchTableItems, setSearchTableItems] = useState([]);
   const alertsManager = createAlertsManager();
 
   const { error, isLoading, list = [], meta = {} } = usePromotions({ // Removed 'list = []' parameter after 'isLoading'
@@ -94,7 +94,7 @@ const Index = () => {
       const url = `/api/promotions${query ? `?${query}` : ''}`;
       const res = await fetch(url);
       const { data } = await res.json();
-      tableItems(data);
+      setSearchTableItems(data);
 
       if (data.length === 0) {
           const alert = {
