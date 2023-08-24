@@ -4,6 +4,12 @@ import {
   Button,
   createAlertsManager,
   Form,
+import {
+  AlertProps,
+  AlertsManager,
+  Button,
+  createAlertsManager,
+  Form,
   FormGroup,
   Input,
   Panel,
@@ -13,7 +19,6 @@ import {
   TableSortDirection,
   Text,
 } from '@bigcommerce/big-design';
-import { SearchIcon } from "@bigcommerce/big-design-icons"
 import Link from 'next/link';
 import { ReactElement, useState } from 'react';
 import { PromotionTableItem } from '@types';
@@ -28,10 +33,9 @@ const Index = () => {
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
   const [couponCode, setCouponCode] = useState('');
   const [loading, setLoading] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
   const alertsManager = createAlertsManager();
 
-  const { error, isLoading, list = [], meta = {} } = usePromotions({ // Removed 'list = []' parameter after 'isLoading'
+  const { error, isLoading, list = [], meta = {} } = usePromotions({
     page: String(currentPage),
     limit: String(itemsPerPage),
     ...(columnHash && { sort: columnHash, direction: direction.toLowerCase() }),
@@ -40,8 +44,8 @@ const Index = () => {
   const itemsPerPageOptions = [10, 20, 50, 100, 250];
 
   const tableItems: PromotionTableItem[] = list.map(
-    ({ name, current_uses, max_uses, status, start_date, end_date, currency_code }) => ({ // removed 'id'
-      // id: id.toString(), 
+    ({ id, name, current_uses, max_uses, status, start_date, end_date, currency_code }) => ({
+      id,
       name,
       current_uses,
       max_uses,
@@ -62,7 +66,7 @@ const Index = () => {
     setDirection(newDirection);
   };
 
-  const renderName = (id: string, name: string): ReactElement => ( // removed 'id:string'
+  const renderName = (id: string, name: string): ReactElement => (
     <Link href={`/promotions/${id}`}>
       <StyledLink>{name}</StyledLink>
     </Link>
@@ -83,50 +87,40 @@ const Index = () => {
   const renderCurrencyCode = (currency_code: string): ReactElement => <Text bold>{currency_code}</Text>;
 
   const handleSearch = async () => {
-  setLoading(true);
-  try {
-      let query = '';
-
-      if (couponCode) {
-          query = `code=${couponCode}`;
+    setLoading(true);
+    try {
+      if (!couponCode.trim()) {
+        return; // Prevent empty searches
       }
 
-      const url = `/api/promotions${query ? `?${query}` : ''}`;
+      const url = `/api/promotions?code=${couponCode}`;
       const res = await fetch(url);
       const { data } = await res.json();
-      setSearchResults(data);
 
       if (data.length === 0) {
-          const alert = {
-              type: 'warning',
-              header: 'No results',
-              messages: [
-                  {
-                      text: `No results for ${couponCode}`,
-                  },
-              ],
-              autoDismiss: true,
-          } as AlertProps;
-          alertsManager.add(alert);
+        const alert = {
+          type: 'warning',
+          header: 'No results',
+          messages: [{ text: `No results for ${couponCode}` }],
+          autoDismiss: true,
+        } as AlertProps;
+        alertsManager.add(alert);
       }
-  } catch (error) {
+
+      // Update your table data or state with the search results
+
+    } catch (error) {
       console.error(error);
       const alert = {
-          type: 'error',
-          header: 'Error searching coupon code',
-          messages: [
-              {
-                  text: error.message,
-              },
-          ],
-          autoDismiss: true,
+        type: 'error',
+        header: 'Error searching coupon code',
+        messages: [{ text: error.message }],
+        autoDismiss: true,
       } as AlertProps;
       alertsManager.add(alert);
-  }
-  setLoading(false);
-};
-
-  const displayItems = searchResults.length > 0 ? searchResults : list; // Use the 'list' for regular results
+    }
+    setLoading(false);
+  };
 
   if (isLoading) return <Loading />;
   if (error) return <ErrorMessage error={error} />;
@@ -146,10 +140,10 @@ const Index = () => {
           Search
         </Button>
       </Form>
-      <AlertsManager manager={alertsManager} />
+      <AlertsManager manager={alertsManager} position="top" />
       <Table
         columns={[
-          { header: 'Promotion name', hash: 'name', render: ({ name }) => renderName(name), isSortable: true }, // removed 'id' from the render and renderName
+          { header: 'Promotion name', hash: 'name', render: ({ id, name }) => renderName(id, name), isSortable: true },
           { header: 'Start Date', hash: 'start_date', render: ({ start_date }) => renderDate(start_date), isSortable: true },
           { header: 'End Date', hash: 'end_date', render: ({ end_date }) => renderDate(end_date) },
           { header: 'Current Uses', hash: 'current_uses', render: ({ current_uses }) => renderCurrentUses(current_uses) },
@@ -157,7 +151,7 @@ const Index = () => {
           { header: 'Currency', hash: 'currency_code', render: ({ currency_code }) => renderCurrencyCode(currency_code) },
           { header: 'Status', hash: 'status', render: ({ status }) => renderStatus(status) },
         ]}
-        items={displayItems}
+        items={tableItems}
         itemName="Promotions"
         pagination={{
           currentPage,
