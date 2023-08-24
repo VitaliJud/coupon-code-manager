@@ -1,4 +1,4 @@
-# Coupon Manager
+# Coupon Manager patch branch
 This is a coupon manager app built with the [BigCommerce NextJS Sample App](https://github.com/bigcommerce/sample-app-nodejs). This app enables users to view, bulk generate, and bulk export coupon codes for [Coupon Promotions](https://support.bigcommerce.com/s/article/Coupon-Promotions).
 
 This app is provided `as-is` with no guarantees.
