@@ -2,6 +2,7 @@ import {
   AlertProps,
   AlertsManager,
   Button,
+  createAlertsManager,
   Form,
   FormGroup,
   Input,
@@ -11,7 +12,6 @@ import {
   Table,
   TableSortDirection,
   Text,
-  createAlertsManager,
 } from '@bigcommerce/big-design';
 import { SearchIcon } from "@bigcommerce/big-design-icons"
 import Link from 'next/link';
