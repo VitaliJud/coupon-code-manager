@@ -18,7 +18,7 @@ export default async function promotions(req: NextApiRequest, res: NextApiRespon
         try {
             const { accessToken, storeHash } = await getSession(req);
             const bigcommerce = bigcommerceClient(accessToken, storeHash, 'v3');
-            const { page, limit, sort, direction } = req.query;
+            const { page, limit, code, sort, direction } = req.query;
             const params = new URLSearchParams({ page, limit, code, ...(sort && { sort, direction}), redemption_type: PromotionRedemptionType.coupon }).toString();
     
             const response = await bigcommerce.get(`/promotions?${params}`)
