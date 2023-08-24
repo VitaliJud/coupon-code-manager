@@ -27,10 +27,10 @@ const Index = () => {
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
   const [couponCode, setCouponCode] = useState('');
   const [loading, setLoading] = useState(false);
-  const [tableItems, setTableItems] = useState([]);
+  // const [tableItems, setTableItems] = useState([]);
   const alertsManager = createAlertsManager();
 
-  const { error, isLoading, meta = {} } = usePromotions({ // Removed 'list = []' parameter after 'isLoading'
+  const { error, isLoading, list = [], meta = {} } = usePromotions({ // Removed 'list = []' parameter after 'isLoading'
     page: String(currentPage),
     limit: String(itemsPerPage),
     ...(columnHash && { sort: columnHash, direction: direction.toLowerCase() }),
@@ -38,18 +38,18 @@ const Index = () => {
 
   const itemsPerPageOptions = [10, 20, 50, 100, 250];
 
-  // const tableItems: PromotionTableItem[] = list.map(
-  //   ({ id, name, current_uses, max_uses, status, start_date, end_date, currency_code }) => ({
-  //     id,
-  //     name,
-  //     current_uses,
-  //     max_uses,
-  //     status,
-  //     start_date,
-  //     end_date,
-  //     currency_code,
-  //   })
-  // );
+  const tableItems: PromotionTableItem[] = list.map(
+    ({ id, name, current_uses, max_uses, status, start_date, end_date, currency_code }) => ({
+      id,
+      name,
+      current_uses,
+      max_uses,
+      status,
+      start_date,
+      end_date,
+      currency_code,
+    })
+  );
 
   const onItemsPerPageChange = (newRange) => {
     setCurrentPage(1);
@@ -93,7 +93,7 @@ const Index = () => {
       const url = `/api/promotions${query ? `?${query}` : ''}`;
       const res = await fetch(url);
       const { data } = await res.json();
-      setTableItems(data);
+      tableItems(data);
 
       if (data.length === 0) {
           const alert = {
