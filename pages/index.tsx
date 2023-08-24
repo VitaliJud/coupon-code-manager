@@ -16,6 +16,7 @@ import {
 import { SearchIcon } from "@bigcommerce/big-design-icons"
 import Link from 'next/link';
 import { ReactElement, useState } from 'react';
+import { PromotionTableItem } from '@types';
 import ErrorMessage from '../components/error';
 import Loading from '../components/loading';
 import { usePromotions } from '../lib/hooks';
