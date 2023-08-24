@@ -30,7 +30,7 @@ const Index = () => {
   const [tableItems, setTableItems] = useState([]);
   const alertsManager = createAlertsManager();
 
-  const { error, isLoading, list = [], meta = {} } = usePromotions({
+  const { error, isLoading, meta = {} } = usePromotions({ // Removed 'list = []' parameter after 'isLoading'
     page: String(currentPage),
     limit: String(itemsPerPage),
     ...(columnHash && { sort: columnHash, direction: direction.toLowerCase() }),
