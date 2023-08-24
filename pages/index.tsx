@@ -6,6 +6,7 @@ import {
   FormGroup,
   Input,
   Panel,
+  Small,
   Link as StyledLink,
   Table,
   TableSortDirection,
