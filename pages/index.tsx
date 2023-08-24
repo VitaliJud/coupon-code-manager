@@ -93,7 +93,7 @@ const Index = () => {
         const url = `/api/promotions${query ? `?${query}` : ''}`;
         const res = await fetch(url);
         const { data } = await res.json();
-        setCustomers(data);
+        setTableItems(data);
 
         if (data.length === 0) {
             const alert = {
