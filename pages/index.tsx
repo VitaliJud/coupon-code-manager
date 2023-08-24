@@ -135,7 +135,7 @@ const Index = () => {
           Search
         </Button>
       </Form>
-      <AlertsManager manager={alertsManager} position="top" />
+      <AlertsManager manager={alertsManager} />
       <Table
         columns={[
           { header: 'Promotion name', hash: 'name', render: ({ id, name }) => renderName(id, name), isSortable: true },
