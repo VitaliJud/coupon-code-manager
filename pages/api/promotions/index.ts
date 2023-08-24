@@ -1,18 +1,21 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { pino } from 'pino';
+// import { pino } from 'pino';
 import { URLSearchParams } from "url";
 import { bigcommerceClient, getSession } from "@lib/auth";
 import { PromotionRedemptionType } from "@types";
 
-const logger = pino({
-    transport: {
-        target: 'pino-pretty',
-        options: { destination: 1 }
-    }
-})
+// const logger = pino({
+//     transport: {
+//         target: 'pino-pretty',
+//         options: { destination: 1 }
+//     }
+// })
 
 export default async function promotions(req: NextApiRequest, res: NextApiResponse) {
-    const { method } = req
+    const { 
+        method
+        // query: { couponCode, limit, page, codeId },
+    } = req
 
     if (method === 'GET') {
         try {
@@ -21,9 +24,9 @@ export default async function promotions(req: NextApiRequest, res: NextApiRespon
             const { page, limit, code, sort, direction } = req.query;
             const params = new URLSearchParams({ page, limit, code, ...(sort && { sort, direction}), redemption_type: PromotionRedemptionType.coupon }).toString();
             
-            logger.info(`Code: ${couponCode}`)
-            const getEndpoint = `/promotions?codes=${couponCode}`
-            logger.info(`Current URL: ${getEndpoint}`)
+            // logger.info(`Code: ${couponCode}`)
+            // const getEndpoint = `/promotions?codes=${couponCode}`
+            // logger.info(`Current URL: ${getEndpoint}`)
     
             const response = await bigcommerce.get(`/promotions?${params}`)
             res.status(200).json(response)
