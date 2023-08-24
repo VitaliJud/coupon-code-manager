@@ -16,7 +16,6 @@ import {
 import { SearchIcon } from "@bigcommerce/big-design-icons"
 import Link from 'next/link';
 import { ReactElement, useState } from 'react';
-import { PromotionTableItem } from '@types';
 import ErrorMessage from '../components/error';
 import Loading from '../components/loading';
 import { usePromotions } from '../lib/hooks';
@@ -94,7 +93,6 @@ const Index = () => {
         const url = `/api/promotions${query ? `?${query}` : ''}`;
         const res = await fetch(url);
         const { data } = await res.json();
-        setTableItems(data);
 
         if (data.length === 0) {
             const alert = {
@@ -109,6 +107,9 @@ const Index = () => {
             } as AlertProps;
             alertsManager.add(alert);
         }
+        // Create a new array with the updated data
+        const updatedTableItems = [...data];
+        setTableItems(updatedTableItems);
     } catch (error) {
         console.error(error);
         const alert = {
