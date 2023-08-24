@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
-import { SearchIcon, AlertProps, AlertsManager, Button, Form, FormGroup, Input, Panel, Link as StyledLink, Table, TableSortDirection, Text, createAlertsManager,
+import {
+  AlertProps,
+  AlertsManager,
+  Button,
+  Form,
+  FormGroup,
+  Input,
+  Panel,
+  Link as StyledLink,
+  Table,
+  TableSortDirection,
+  Text,
+  createAlertsManager,
 } from '@bigcommerce/big-design';
+import { SearchIcon } from "@bigcommerce/big-design-icons"
 import Link from 'next/link';
 import { PromotionTableItem } from '@types';
 import ErrorMessage from '../components/error';
