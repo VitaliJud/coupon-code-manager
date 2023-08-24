@@ -82,50 +82,49 @@ const Index = () => {
   const renderCurrencyCode = (currency_code: string): ReactElement => <Text bold>{currency_code}</Text>;
 
   const handleSearch = async () => {
-    setLoading(true);
-    try {
-        let query = '';
+  setLoading(true);
+  try {
+      let query = '';
 
-        if (couponCode) {
-            query = `code=${couponCode}`;
-        }
+      if (couponCode) {
+          query = `code=${couponCode}`;
+      }
 
-        const url = `/api/promotions${query ? `?${query}` : ''}`;
-        const res = await fetch(url);
-        const { data } = await res.json();
+      const url = `/api/promotions${query ? `?${query}` : ''}`;
+      const res = await fetch(url);
+      const { data } = await res.json();
+      setTableItems(data);
 
-        if (data.length === 0) {
-            const alert = {
-                type: 'warning',
-                header: 'No results',
-                messages: [
-                    {
-                        text: `No results for ${couponCode}`,
-                    },
-                ],
-                autoDismiss: true,
-            } as AlertProps;
-            alertsManager.add(alert);
-        }
-        // Create a new array with the updated data
-        const updatedTableItems = [...data];
-        setTableItems(updatedTableItems);
-    } catch (error) {
-        console.error(error);
-        const alert = {
-            type: 'error',
-            header: 'Error searching coupon code',
-            messages: [
-                {
-                    text: error.message,
-                },
-            ],
-            autoDismiss: true,
-        } as AlertProps;
-        alertsManager.add(alert);
-    }
-    setLoading(false);
+      if (data.length === 0) {
+          const alert = {
+              type: 'warning',
+              header: 'No results',
+              messages: [
+                  {
+                      text: `No results for ${couponCode}`,
+                  },
+              ],
+              autoDismiss: true,
+          } as AlertProps;
+          alertsManager.add(alert);
+      }
+  } catch (error) {
+      console.error(error);
+      const alert = {
+          type: 'error',
+          header: 'Error searching coupon code',
+          messages: [
+              {
+                  text: error.message,
+              },
+          ],
+          autoDismiss: true,
+      } as AlertProps;
+      alertsManager.add(alert);
+  }
+  setLoading(false);
 };
+
 
 
   if (isLoading) return <Loading />;
