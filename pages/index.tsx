@@ -4,12 +4,6 @@ import {
   Button,
   createAlertsManager,
   Form,
-import {
-  AlertProps,
-  AlertsManager,
-  Button,
-  createAlertsManager,
-  Form,
   FormGroup,
   Input,
   Panel,
