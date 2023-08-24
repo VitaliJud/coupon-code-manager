@@ -28,6 +28,7 @@ const Index = () => {
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
   const [couponCode, setCouponCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [tableItems, setTableItems] = useState([]);
   const alertsManager = createAlertsManager();
 
   const { error, isLoading, list = [], meta = {} } = usePromotions({
