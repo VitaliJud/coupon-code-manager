@@ -39,18 +39,18 @@ const Index = () => {
 
   const itemsPerPageOptions = [10, 20, 50, 100, 250];
 
-  const tableItems: PromotionTableItem[] = list.map(
-    ({ id, name, current_uses, max_uses, status, start_date, end_date, currency_code }) => ({
-      id,
-      name,
-      current_uses,
-      max_uses,
-      status,
-      start_date,
-      end_date,
-      currency_code,
-    })
-  );
+  // const tableItems: PromotionTableItem[] = list.map(
+  //   ({ id, name, current_uses, max_uses, status, start_date, end_date, currency_code }) => ({
+  //     id,
+  //     name,
+  //     current_uses,
+  //     max_uses,
+  //     status,
+  //     start_date,
+  //     end_date,
+  //     currency_code,
+  //   })
+  // );
 
   const onItemsPerPageChange = (newRange) => {
     setCurrentPage(1);
