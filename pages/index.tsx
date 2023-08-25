@@ -56,31 +56,52 @@ const Index = () => {
     setTableItems(newList);
   };
 
-  const handleSearch = async (couponCode: string) => {
-    const { list, meta, isLoading, error } = useCouponSearch(couponCode);
-
-    if (isLoading) return <Loading />;
-    if (error) return <ErrorMessage error={error} />;
-
-    // Update the table data with the search results
-
-    setTableItems(list);
-
-    // Check if there are any results
-
-    if (list.length === 0) {
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+      let query = '';
+  
+      if (couponCode) {
+        query = `code=${couponCode}`;
+      }
+  
+      const url = `/api/promotions${query ? `?${query}` : ''}`;
+      const res = await fetch(url);
+      const { data } = await res.json();
+  
+      // Update the table items with the search results
+      setTableItems(data);
+  
+      if (data.length === 0) {
+        const alert = {
+          type: 'warning',
+          header: 'No results',
+          messages: [
+            {
+              text: `No results for ${couponCode}`,
+            },
+          ],
+          autoDismiss: true,
+        } as AlertProps;
+        alertsManager.add(alert);
+      }
+    } catch (error) {
+      console.error(error);
       const alert = {
-        type: 'warning',
-        header: 'No results',
-        messages: [{ text: `No results for ${couponCode}` }],
+        type: 'error',
+        header: 'Error searching coupon code',
+        messages: [
+          {
+            text: error.message,
+          },
+        ],
         autoDismiss: true,
       } as AlertProps;
       alertsManager.add(alert);
     }
+    setLoading(false);
   };
 
-  if (isLoading) return <Loading />;
-  if (error) return <ErrorMessage error={error} />;
 
   return (
     <Panel header="Coupon Promotions">
