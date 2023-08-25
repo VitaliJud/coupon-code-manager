@@ -56,6 +56,37 @@ const Index = () => {
     setTableItems(newList);
   };
 
+    const onItemsPerPageChange = (newRange) => {
+    setCurrentPage(1);
+    setItemsPerPage(newRange);
+  };
+
+  const onSort = (newColumnHash, newDirection) => {
+    setColumnHash(newColumnHash);
+    setDirection(newDirection);
+  };
+
+  const renderName = (id: string, name: string): ReactElement => (
+    <Link href={`/promotions/${id}`}>
+      <StyledLink>{name}</StyledLink>
+    </Link>
+  );
+
+  const renderCurrentUses = (uses: number): ReactElement => <Small>{uses}</Small>;
+
+  const renderMaxUses = (uses: number): ReactElement => (
+    <Small>{uses ? uses : String.fromCharCode(0x221E)}</Small>
+  );
+
+  const renderStatus = (status: string): ReactElement => <Text>{status}</Text>;
+
+  const renderDate = (date: string): ReactElement => (
+    <Text>{date && new Date(date).toLocaleString()}</Text>
+  );
+
+  const renderCurrencyCode = (currency_code: string): ReactElement => <Text bold>{currency_code}</Text>;
+
+  
   const handleSearch = async () => {
     setLoading(true);
     try {
