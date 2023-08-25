@@ -122,3 +122,18 @@ export function useCodes(promotionId: number, query?: QueryParams) {
         mutateList,
     }
 }
+
+export function useCouponSearch(couponCode: string) {
+  const { context } = useSession();
+  const params = new URLSearchParams({ code: couponCode, context });
+
+  const { data, error, mutate: mutateList } = useSWR([`/api/promotions`, params], fetcher);
+
+  return {
+    list: data?.data,
+    meta: data?.meta,
+    isLoading: !data && !error,
+    error,
+    mutateList,
+  };
+}
