@@ -19,7 +19,7 @@ import { ReactElement, useState } from 'react';
 import { PromotionTableItem } from '@types';
 import ErrorMessage from '../components/error';
 import Loading from '../components/loading';
-import { usePromotions } from '../lib/hooks';
+import { usePromotions, useCouponSearch } from '../lib/hooks';
 
 const Index = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -51,70 +51,32 @@ const Index = () => {
     })
   );
 
-  const onItemsPerPageChange = (newRange) => {
-    setCurrentPage(1);
-    setItemsPerPage(newRange);
+  const setTableItems = (newList: PromotionTableItem[]) => {
+    setItemsPerPage(newList.length);
+    setTableItems(newList);
   };
 
-  const onSort = (newColumnHash, newDirection) => {
-    setColumnHash(newColumnHash);
-    setDirection(newDirection);
-  };
+  const handleSearch = async (couponCode: string) => {
+    const { list, meta, isLoading, error } = useCouponSearch(couponCode);
 
-  const renderName = (id: string, name: string): ReactElement => (
-    <Link href={`/promotions/${id}`}>
-      <StyledLink>{name}</StyledLink>
-    </Link>
-  );
+    if (isLoading) return <Loading />;
+    if (error) return <ErrorMessage error={error} />;
 
-  const renderCurrentUses = (uses: number): ReactElement => <Small>{uses}</Small>;
+    // Update the table data with the search results
 
-  const renderMaxUses = (uses: number): ReactElement => (
-    <Small>{uses ? uses : String.fromCharCode(0x221E)}</Small>
-  );
+    setTableItems(list);
 
-  const renderStatus = (status: string): ReactElement => <Text>{status}</Text>;
+    // Check if there are any results
 
-  const renderDate = (date: string): ReactElement => (
-    <Text>{date && new Date(date).toLocaleString()}</Text>
-  );
-
-  const renderCurrencyCode = (currency_code: string): ReactElement => <Text bold>{currency_code}</Text>;
-
-  const handleSearch = async () => {
-    setLoading(true);
-    try {
-      if (!couponCode.trim()) {
-        return; // Prevent empty searches
-      }
-
-      const url = `/api/promotions?code=${couponCode}`;
-      const res = await fetch(url);
-      const { data } = await res.json();
-
-      if (data.length === 0) {
-        const alert = {
-          type: 'warning',
-          header: 'No results',
-          messages: [{ text: `No results for ${couponCode}` }],
-          autoDismiss: true,
-        } as AlertProps;
-        alertsManager.add(alert);
-      }
-
-      // Update your table data or state with the search results
-
-    } catch (error) {
-      console.error(error);
+    if (list.length === 0) {
       const alert = {
-        type: 'error',
-        header: 'Error searching coupon code',
-        messages: [{ text: error.message }],
+        type: 'warning',
+        header: 'No results',
+        messages: [{ text: `No results for ${couponCode}` }],
         autoDismiss: true,
       } as AlertProps;
       alertsManager.add(alert);
     }
-    setLoading(false);
   };
 
   if (isLoading) return <Loading />;
@@ -146,7 +108,7 @@ const Index = () => {
           { header: 'Currency', hash: 'currency_code', render: ({ currency_code }) => renderCurrencyCode(currency_code) },
           { header: 'Status', hash: 'status', render: ({ status }) => renderStatus(status) },
         ]}
-        items={tableItems}
+        items={list} // replaced 'tableItems' with 'list'
         itemName="Promotions"
         pagination={{
           currentPage,
