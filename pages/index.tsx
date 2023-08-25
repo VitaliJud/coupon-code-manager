@@ -19,7 +19,7 @@ import { ReactElement, useState } from 'react';
 import { PromotionTableItem } from '@types';
 import ErrorMessage from '../components/error';
 import Loading from '../components/loading';
-import { usePromotions, useCouponSearch } from '../lib/hooks';
+import { usePromotions } from '../lib/hooks';
 
 const Index = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -51,12 +51,7 @@ const Index = () => {
     })
   );
 
-  const setTableItems = (newList: PromotionTableItem[]) => {
-    setItemsPerPage(newList.length);
-    setTableItems(newList);
-  };
-
-    const onItemsPerPageChange = (newRange) => {
+  const onItemsPerPageChange = (newRange) => {
     setCurrentPage(1);
     setItemsPerPage(newRange);
   };
@@ -86,7 +81,6 @@ const Index = () => {
 
   const renderCurrencyCode = (currency_code: string): ReactElement => <Text bold>{currency_code}</Text>;
 
-  
   const handleSearch = async () => {
     setLoading(true);
     try {
@@ -133,6 +127,8 @@ const Index = () => {
     setLoading(false);
   };
 
+  if (isLoading) return <Loading />;
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <Panel header="Coupon Promotions">
@@ -160,7 +156,7 @@ const Index = () => {
           { header: 'Currency', hash: 'currency_code', render: ({ currency_code }) => renderCurrencyCode(currency_code) },
           { header: 'Status', hash: 'status', render: ({ status }) => renderStatus(status) },
         ]}
-        items={list} // replaced 'tableItems' with 'list'
+        items={tableItems}
         itemName="Promotions"
         pagination={{
           currentPage,
