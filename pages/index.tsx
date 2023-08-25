@@ -51,18 +51,18 @@ const Index = () => {
     })
   );
 
-  const setTableItems: PromotionTableItem[] = list.map(
-    ({ id, name, current_uses, max_uses, status, start_date, end_date, currency_code }) => ({
-      id,
-      name,
-      current_uses,
-      max_uses,
-      status,
-      start_date,
-      end_date,
-      currency_code,
-    })
-  );
+  // const setTableItems: PromotionTableItem[] = list.map(
+  //   ({ id, name, current_uses, max_uses, status, start_date, end_date, currency_code }) => ({
+  //     id,
+  //     name,
+  //     current_uses,
+  //     max_uses,
+  //     status,
+  //     start_date,
+  //     end_date,
+  //     currency_code,
+  //   })
+  // );
   
   const onItemsPerPageChange = (newRange) => {
     setCurrentPage(1);
@@ -108,7 +108,7 @@ const Index = () => {
       const { data } = await res.json();
   
       // Update the table items with the search results
-      setTableItems(data);
+      tableItems(data);
   
       if (data.length === 0) {
         const alert = {
