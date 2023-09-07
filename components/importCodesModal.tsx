@@ -37,19 +37,20 @@ const ImportCodesModal = ({ onClose }: ImportCodesModalProps) => {
     
     // You can also use the `postCoupon` function to create codes as needed.
     };
-    
-    if (currentStep === 0 && !abortController) {
-        try {
-            const ac = new AbortController()
-            setAbortController(ac)
-            fetchCoupons(ac.signal)
-        } catch (error) {
-            if (error.message != "The user aborted a request." ) {
-                console.error(error)
-                setCurrentStep(1)
-            }
-        }
-    }
+
+    // ==== SAMPLE FROM THE EXPORT ====
+    // if (currentStep === 0 && !abortController) {        
+    //     try {
+    //         const ac = new AbortController()
+    //         setAbortController(ac)
+    //         fetchCoupons(ac.signal)
+    //     } catch (error) {
+    //         if (error.message != "The user aborted a request." ) {
+    //             console.error(error)
+    //             setCurrentStep(1)
+    //         }
+    //     }
+    // }
     
     const handleClose = () => {
       abortController.abort()
