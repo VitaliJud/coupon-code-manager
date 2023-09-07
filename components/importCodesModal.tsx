@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  Modal,
-  ModalAction,
-  ProgressBar,
-  Stepper,
-  Text,
-  Message,
-  Link,
-} from '@bigcommerce/big-design';
+import { Box, Button, Modal, ModalAction, ProgressBar, Stepper, Text, Message, Link, } from '@bigcommerce/big-design';
 import { useSession } from '../context/session';
 
-const ImportCodesModal = ({ promotionId, onClose }) => {
+interface ImportCodesModalProps {
+    promotionId: number,
+    onClose: () => void
+}
+
+const ImportCodesModal = ({ promotionId, onClose }: ImportCodesModalProps) => {
   const encodedContext = useSession()?.context;
   const [currentStep, setCurrentStep] = useState(0);
   const [uploading, setUploading] = useState(false);
+  const [abortController, setAbortController] = useState(null)
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
 
@@ -42,34 +38,69 @@ const ImportCodesModal = ({ promotionId, onClose }) => {
     // You can also use the `postCoupon` function to create codes as needed.
   };
 
-  const renderActions = () => {
+  const handleClose = () => {
+      abortController.abort()
+      onClose()
+  }
+
+  const handleStop = () => {
+      abortController.abort()
+      setCurrentStep(1)
+  }
+  
+  const renderActions = (): ModalAction[] => {
     if (currentStep === 0) {
       return [
-        { text: 'Cancel', variant: 'subtle', onClick: onClose },
-        <label htmlFor="csv-upload" key="upload-label">
-          <Button variant="primary">Upload CSV</Button>
-          <input
-            id="csv-upload"
-            type="file"
-            accept=".csv"
-            onChange={handleFileChange}
-            style={{ display: 'none' }}
-          />
-        </label>,
-        <Button
-          key="upload-button"
-          variant="primary"
-          onClick={handleUpload}
-        >
-          Start Import
-        </Button>,
-      ];
+                {text: 'Stop Import and Close', variant: 'subtle', onClick: handleClose},
+                {text: 'Stop Import and Download Codes', variant: 'primary', onClick: handleStop}
+            ]
+        }
+
+        if (currentStep == 1) {
+            return [
+                { text: 'Close', variant: 'subtle', onClick: handleClose}
+            ]
+        }
     }
 
-    return [
-      { text: 'Close', variant: 'subtle', onClick: onClose },
-    ];
-  };
+    const renderOnModalClose = () => {
+        if (currentStep == 0) {
+            return handleClose
+        }
+
+        if (currentStep == 1) {
+            return onClose
+        }
+    }
+
+      
+      
+  //     return [
+  //       { text: 'Cancel', variant: 'subtle', onClick: onClose },
+  //       <label htmlFor="csv-upload" key="upload-label">
+  //         <Button variant="primary">Upload CSV</Button>
+  //         <input
+  //           id="csv-upload"
+  //           type="file"
+  //           accept=".csv"
+  //           onChange={handleFileChange}
+  //           style={{ display: 'none' }}
+  //         />
+  //       </label>,
+  //       <Button
+  //         key="upload-button"
+  //         variant="primary"
+  //         onClick={handleUpload}
+  //       >
+  //         Start Import
+  //       </Button>,
+  //     ];
+  //   }
+
+  //   return [
+  //     { text: 'Close', variant: 'subtle', onClick: onClose },
+  //   ];
+  // };
 
   const renderContent = () => {
     switch (currentStep) {
@@ -85,11 +116,19 @@ const ImportCodesModal = ({ promotionId, onClose }) => {
                 onChange={handleFileChange}
                 style={{ display: 'none' }}
               />
+              <Button
+                variant="primary"
+                onClick={() => {
+                  window.open('https://store-vx1nrciuac.mybigcommerce.com/content/coupon-codes-import-template.csv');
+                }}
+              >
+                Download Codes Template
+              </Button>
               {error && <Text color="danger">{error}</Text>}
             </Box>
           </>
         );
-      case 2:
+      case 1:
         return (
           <>
             <Message
@@ -100,15 +139,6 @@ const ImportCodesModal = ({ promotionId, onClose }) => {
                 },
               ]}
             />
-            {/* Use a Button for the download link */}
-            <Button
-              variant="primary"
-              onClick={() => {
-                window.open('https://store-vx1nrciuac.mybigcommerce.com/content/coupon-codes-import-template.csv');
-              }}
-            >
-              Download Codes Template
-            </Button>
           </>
         );
       default:
@@ -125,7 +155,7 @@ const ImportCodesModal = ({ promotionId, onClose }) => {
       closeOnClickOutside={false}
       closeOnEscKey={false}
     >
-      <Stepper steps={['Select File', 'Upload', 'Complete']} currentStep={currentStep} />
+      <Stepper steps={['Select File', 'Complete']} currentStep={currentStep} />
       {renderContent()}
     </Modal>
   );
