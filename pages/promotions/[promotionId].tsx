@@ -1,5 +1,5 @@
 import { Box, Button, Checkbox, Flex, Panel, Small, Link as StyledLink, Table, Text } from '@bigcommerce/big-design';
-import { AddIcon, ArrowDownwardIcon } from '@bigcommerce/big-design-icons';
+import { AddIcon, DeleteIcon, GetAppIcon } from '@bigcommerce/big-design-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactElement, useState } from 'react';
@@ -116,13 +116,13 @@ const Promotion = () => {
           </Link>
         </Box>
         <Box>
-          <Button iconLeft={<ArrowDownwardIcon />} onClick={() => setExporting(true)}>
+          <Button iconLeft={<GetAppIcon />} onClick={() => setExporting(true)}>
             Export Coupons
           </Button>
           <Button iconLeft={<AddIcon />} onClick={() => setGenerating(true)}>
             Generate Coupons
           </Button>
-          <Button onClick={handleDeleteSelected}>Delete Selected</Button>
+          <Button iconLeft={<DeleteIcon />} onClick={handleDeleteSelected}>Delete Selected</Button>
         </Box>
       </Flex>
       <Table
