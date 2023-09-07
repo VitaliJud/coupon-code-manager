@@ -38,7 +38,7 @@ const ImportCodesModal = ({ onClose }: ImportCodesModalProps) => {
     // You can also use the `postCoupon` function to create codes as needed.
     };
     
-    if(currentStep === 0 && !abortController) {
+    if (currentStep === 0 && !abortController) {
         try {
             const ac = new AbortController()
             setAbortController(ac)
