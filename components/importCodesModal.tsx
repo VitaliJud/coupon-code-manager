@@ -100,12 +100,15 @@ const ImportCodesModal = ({ promotionId, onClose }) => {
                 },
               ]}
             />
-            {/* Provide a separate message item for the download link */}
-            <MessageLinkItem>
-              <Link href="https://store-vx1nrciuac.mybigcommerce.com/content/coupon-codes-import-template.csv" download="coupon-codes-import-template.csv">
-                Download Codes Template
-              </Link>
-            </MessageLinkItem>
+            {/* Use a Button for the download link */}
+            <Button
+              variant="primary"
+              onClick={() => {
+                window.open('https://store-vx1nrciuac.mybigcommerce.com/content/coupon-codes-import-template.csv');
+              }}
+            >
+              Download Codes Template
+            </Button>
           </>
         );
       default:
