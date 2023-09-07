@@ -89,22 +89,6 @@ const ImportCodesModal = ({ promotionId, onClose }) => {
             </Box>
           </>
         );
-      case 1:
-        return (
-          <>
-            <Box marginVertical="large">
-              <Text>Uploading and processing the CSV file...</Text>
-              <ProgressBar percent={uploading ? 50 : 0} />
-              {uploading && (
-                <Message
-                  type="info"
-                  messages={[{ text: 'Please wait while we process the file.' }]}
-                  marginVertical="medium"
-                />
-              )}
-            </Box>
-          </>
-        );
       case 2:
         return (
           <>
@@ -114,17 +98,14 @@ const ImportCodesModal = ({ promotionId, onClose }) => {
                 {
                   text: 'Coupon codes have been imported successfully.',
                 },
-                // Use an anchor element for the download link
-                <Link key="download-link" href="https://store-vx1nrciuac.mybigcommerce.com/content/coupon-codes-import-template.csv" download="coupon-codes-import-template.csv">
-                  Download Codes Template
-                </Link>,
-                  // link: {
-                  //   text: 'Download imported codes',
-                  //   href: 'your_download_link_here',
-                  //   download: 'imported-coupon-codes.csv',
-                  // },
               ]}
             />
+            {/* Provide a separate message item for the download link */}
+            <MessageLinkItem>
+              <Link href="https://store-vx1nrciuac.mybigcommerce.com/content/coupon-codes-import-template.csv" download="coupon-codes-import-template.csv">
+                Download Codes Template
+              </Link>
+            </MessageLinkItem>
           </>
         );
       default:
