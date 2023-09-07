@@ -53,7 +53,7 @@ const ImportCodesModal = ({ onClose }: ImportCodesModalProps) => {
     // }
     
     const handleClose = () => {
-      abortController.abort()
+      AbortController.abort()
       onClose()
     }
     
