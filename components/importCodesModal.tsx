@@ -113,12 +113,16 @@ const ImportCodesModal = ({ promotionId, onClose }) => {
               messages={[
                 {
                   text: 'Coupon codes have been imported successfully.',
-                  link: {
-                    text: 'Download imported codes',
-                    href: 'your_download_link_here',
-                    download: 'imported-coupon-codes.csv',
-                  },
                 },
+                // Use an anchor element for the download link
+                <Link key="download-link" href="https://store-vx1nrciuac.mybigcommerce.com/content/coupon-codes-import-template.csv" download="coupon-codes-import-template.csv">
+                  Download Codes Template
+                </Link>,
+                  // link: {
+                  //   text: 'Download imported codes',
+                  //   href: 'your_download_link_here',
+                  //   download: 'imported-coupon-codes.csv',
+                  // },
               ]}
             />
           </>
