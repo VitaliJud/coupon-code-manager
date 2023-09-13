@@ -31,8 +31,6 @@ const Index = () => {
   const [couponCode, setCouponCode] = useState('');
   const [loading, setLoading] = useState(false);
   const alertsManager = createAlertsManager();
-
-  console.log("Encoded Context: ", encodedContext);  // Ensure that this prints a value
   
   const { error, isLoading, list = [], meta = {} } = usePromotions({
     page: String(currentPage),
