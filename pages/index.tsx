@@ -86,38 +86,44 @@ const Index = () => {
   const handleSearch = async () => {
     setLoading(true);
     try {
-      if (!couponCode.trim()) {
-        return; // Prevent empty searches
+        if (!couponCode.trim()) {
+            return; // Prevent empty searches
+        }
+
+        const params = new URLSearchParams({
+            code: couponCode,
+            context: encodedContext
+        }).toString();
+
+        const url = `/api/promotions?${params}`;
+        const res = await fetch(url);
+        const { data } = await res.json();
+
+        if (data.length === 0) {
+            const alert = {
+                type: 'warning',
+                header: 'No results',
+                messages: [{ text: `No results for ${couponCode}` }],
+                autoDismiss: true,
+            } as AlertProps;
+            alertsManager.add(alert);
+        }
+
+        // Update your table data or state with the search results
+    
+      } catch (error) {
+          console.error(error);
+          const alert = {
+              type: 'error',
+              header: 'Error searching coupon code',
+              messages: [{ text: error.message }],
+              autoDismiss: true,
+          } as AlertProps;
+          alertsManager.add(alert);
       }
-
-      const url = `/api/promotions?code=${couponCode}&context=${encodedContext}`;
-      const res = await fetch(url);
-      const { data } = await res.json();
-
-      if (data.length === 0) {
-        const alert = {
-          type: 'warning',
-          header: 'No results',
-          messages: [{ text: `No results for ${couponCode}` }],
-          autoDismiss: true,
-        } as AlertProps;
-        alertsManager.add(alert);
-      }
-
-      // Update your table data or state with the search results
-
-    } catch (error) {
-      console.error(error);
-      const alert = {
-        type: 'error',
-        header: 'Error searching coupon code',
-        messages: [{ text: error.message }],
-        autoDismiss: true,
-      } as AlertProps;
-      alertsManager.add(alert);
-    }
-    setLoading(false);
+      setLoading(false);
   };
+
 
   if (isLoading) return <Loading />;
   if (error) return <ErrorMessage error={error} />;
