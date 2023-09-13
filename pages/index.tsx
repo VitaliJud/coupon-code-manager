@@ -102,8 +102,9 @@ const Index = () => {
         const url = `/api/promotions?${params.toString()}`;
     
         const response = await fetch(url);
+        const data = await response.json(); // Parse the JSON response
         
-        if (!response.data || response.data.length === 0) {
+        if (!data || data.length === 0) {
           const alert = {
             type: 'warning',
             header: 'No results',
