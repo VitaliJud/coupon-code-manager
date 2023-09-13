@@ -193,9 +193,9 @@ const Index = () => {
       </Form>
 
       {/* Handle states and display */}
-      {searchIsLoading && <p>Loading...</p>}
-      {searchError && <p>Error: {searchError.message}</p>}
-      {searchList && searchList.map(item => <div key={item.id}>{item.name}</div>)}
+      {isLoading && <p>Loading...</p>}
+      {error && <p>Error: {error.message}</p>}
+      {list && list.map(item => <div key={item.id}>{item.name}</div>)}
       
       <AlertsManager manager={alertsManager} />
       <Table
