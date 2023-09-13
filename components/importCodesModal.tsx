@@ -39,7 +39,7 @@ const ImportCodesModal = ({ promotionId, onClose }: importCodesModalProps): Reac
             <Box marginBottom='medium'>
                 <Form>
                     <FormGroup>
-                        <Text>Add more codes for Promotion Coupon {$promotionId}:</Text>
+                        <Text>Add more codes for Promotion Coupon {promotionId}:</Text>
                         <Input type="file" accept=".csv" onChange={handleUpload} />
                     </FormGroup>
                 </Form>
