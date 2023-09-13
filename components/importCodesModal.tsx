@@ -1,46 +1,46 @@
-import React, { useState } from 'react';
-import { Box, Form, Modal, ModalAction, Text } from '@bigcommerce/big-design';
+import { Box, Form, FormGroup, Input, Modal, Text } from '@bigcommerce/big-design';
+import { ReactElement } from 'react';
 
-export const CouponModal = () => {
-  const [isOpen, setIsOpen] = useState(true);
+interface CouponModalProps {
+    onClose: () => void;
+}
 
-  const handleDownload = () => {
-    window.open('https://store-vx1nrciuac.mybigcommerce.com/content/coupon-codes-import-template.csv', '_blank');
-  };
+const CouponModal = ({ onClose }: CouponModalProps): ReactElement => {
+    const handleDownload = () => {
+        window.open("https://store-vx1nrciuac.mybigcommerce.com/content/coupon-codes-import-template.csv", "_blank");
+    }
 
-  const handleUpload = () => {
-    // Upload logic here
-  };
+    const handleUpload = () => {
+        // Upload handling logic goes here
+    }
 
-  const handleImport = () => {
-    // Import logic here
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
-  return (
-    <Modal
-      isOpen={isOpen}
-      onClose={handleClose}
-      header="Upload and Import Coupon Codes from CSV file"
-      actions={[
-        { text: 'Close', variant: 'subtle', onClick: handleClose },
-        { text: 'Start Import', onClick: handleImport }
-      ]}
-    >
-      <Box>
-        <Text>To get started -</Text>
-        <Box style={{ margin: '20px 0', display: 'flex', justifyContent: 'center' }}>
-          <Form.Link onClick={handleDownload}>Download Template</Form.Link>
-        </Box>
-        <Box style={{ margin: '20px 0', display: 'flex', justifyContent: 'center' }}>
-          <Form.Link onClick={handleUpload}>Upload CSV</Form.Link>
-        </Box>
-      </Box>
-    </Modal>
-  );
-};
+    return (
+        <Modal
+            isOpen={true}
+            actions={[
+                { text: 'Close', variant: 'subtle', onClick: onClose },
+                { text: 'Start Import', onClick: () => {} }
+            ]}
+            header="Upload and Import Coupon Codes from CSV file"
+            onClose={onClose}
+        >
+            <Box marginBottom='medium'>
+                <Text>To get started -</Text>
+            </Box>
+            <Box marginBottom='medium'>
+                <Text onClick={handleDownload} style={{ cursor: 'pointer', color: '#0076de' }}>
+                    Download Template
+                </Text>
+            </Box>
+            <Box marginBottom='medium'>
+                <Form>
+                    <FormGroup>
+                        <Input type="file" onChange={handleUpload} />
+                    </FormGroup>
+                </Form>
+            </Box>
+        </Modal>
+    );
+}
 
 export default CouponModal;
