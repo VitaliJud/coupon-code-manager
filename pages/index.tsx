@@ -19,17 +19,20 @@ import { ReactElement, useState } from 'react';
 import { PromotionTableItem } from '@types';
 import ErrorMessage from '../components/error';
 import Loading from '../components/loading';
+import { useSession } from '../context/session';
 import { usePromotions } from '../lib/hooks';
 
 const Index = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [columnHash, setColumnHash] = useState('');
+  const [searchList, setSearchList] = useState([]);
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
   const [couponCode, setCouponCode] = useState('');
+  // const { list: searchList, error: searchError, isLoading: searchIsLoading } = useCouponSearch(couponCode);
   const [loading, setLoading] = useState(false);
   const alertsManager = createAlertsManager();
-
+  
   const { error, isLoading, list = [], meta = {} } = usePromotions({
     page: String(currentPage),
     limit: String(itemsPerPage),
@@ -81,48 +84,105 @@ const Index = () => {
 
   const renderCurrencyCode = (currency_code: string): ReactElement => <Text bold>{currency_code}</Text>;
 
-  const handleSearch = async () => {
+  const { context } = useSession();
+  
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     setLoading(true);
+
     try {
-      if (!couponCode.trim()) {
-        return; // Prevent empty searches
+        const formData = new FormData(e.currentTarget);
+        const code = formData.get('code') as string;
+
+        if (!code.trim()) {
+            setLoading(false);
+            
+          return; // Prevent empty searches
+        }
+
+        const params = new URLSearchParams({ code: couponCode, context });
+        const url = `/api/promotions?${params.toString()}`;
+    
+        const response = await fetch(url);
+        const data = await response.json(); // Parse the JSON response
+        
+        if (!data || data.length === 0) {
+          const alert = {
+            type: 'warning',
+            header: 'No results',
+            messages: [{ text: `No results for ${code}` }],
+            autoDismiss: true,
+          } as AlertProps;
+          alertsManager.add(alert);
+          
+          return
+        } else {
+          // Update your table data or state with the search results
+          setSearchList(data);   // Using the parsed data, not response.data
+        }
+      } catch (error) {
+          console.error(error);
+          const alert = {
+              type: 'error',
+              header: 'Error searching coupon code',
+              messages: [{ text: error.message }],
+              autoDismiss: true,
+          } as AlertProps;
+          alertsManager.add(alert);
       }
-
-      const url = `/api/promotions?code=${couponCode}`;
-      const res = await fetch(url);
-      const { data } = await res.json();
-
-      if (data.length === 0) {
-        const alert = {
-          type: 'warning',
-          header: 'No results',
-          messages: [{ text: `No results for ${couponCode}` }],
-          autoDismiss: true,
-        } as AlertProps;
-        alertsManager.add(alert);
-      }
-
-      // Update your table data or state with the search results
-
-    } catch (error) {
-      console.error(error);
-      const alert = {
-        type: 'error',
-        header: 'Error searching coupon code',
-        messages: [{ text: error.message }],
-        autoDismiss: true,
-      } as AlertProps;
-      alertsManager.add(alert);
-    }
-    setLoading(false);
+  
+      setLoading(false);
   };
+
+  // const handleSearch = async () => {
+  //   setLoading(true);
+  //   try {
+  //       if (!couponCode.trim()) {
+  //           return; // Prevent empty searches
+  //       }
+
+  //       const params = new URLSearchParams({
+  //           code: couponCode,
+  //           context: encodedContext
+  //       }).toString();
+
+  //       const url = `/api/promotions?${params}`;
+  //       const res = await fetch(url);
+  //       const { data } = await res.json();
+
+  //       if (data.length === 0) {
+  //           const alert = {
+  //               type: 'warning',
+  //               header: 'No results',
+  //               messages: [{ text: `No results for ${couponCode}` }],
+  //               autoDismiss: true,
+  //           } as AlertProps;
+  //           alertsManager.add(alert);
+  //       }
+
+  //       // Update your table data or state with the search results
+    
+  //     } catch (error) {
+  //         console.error(error);
+  //         const alert = {
+  //             type: 'error',
+  //             header: 'Error searching coupon code',
+  //             messages: [{ text: error.message }],
+  //             autoDismiss: true,
+  //         } as AlertProps;
+  //         alertsManager.add(alert);
+  //     }
+  //     setLoading(false);
+  // };
+
 
   if (isLoading) return <Loading />;
   if (error) return <ErrorMessage error={error} />;
 
   return (
     <Panel header="Coupon Promotions">
-      <Form>
+      <Form onSubmit={handleSearch}>
         <FormGroup>
           <Input
             placeholder="Search by coupon code"
@@ -131,10 +191,16 @@ const Index = () => {
             onChange={(e) => setCouponCode(e.target.value)}
           />
         </FormGroup>
-        <Button variant="secondary" iconLeft={<SearchIcon />} onClick={handleSearch} isLoading={loading}>
+        <Button type="submit" variant="secondary" iconLeft={<SearchIcon />} isLoading={loading}>
           Search
         </Button>
       </Form>
+
+      {/* Handle states and display */}
+      {isLoading && <p>Loading...</p>}
+      {error && <p>Error: {error.message}</p>}
+      {searchList && searchList.map(item => <div key={item.id}>{item.name}</div>)}
+      
       <AlertsManager manager={alertsManager} />
       <Table
         columns={[
