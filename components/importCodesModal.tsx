@@ -13,13 +13,16 @@ const CouponModal = ({ onClose }: CouponModalProps): ReactElement => {
     const handleUpload = () => {
         // Upload handling logic goes here
     }
+    const handleImport = () => {
+        alert('Import Started!');
+    }
 
     return (
         <Modal
             isOpen={true}
             actions={[
                 { text: 'Close', variant: 'subtle', onClick: onClose },
-                { text: 'Start Import', onClick: () => {} }
+                { text: 'Start Import', onClick: handleImport }
             ]}
             header="Upload and Import Coupon Codes from CSV file"
             onClose={onClose}
