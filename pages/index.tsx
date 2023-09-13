@@ -178,7 +178,7 @@ const Index = () => {
 
   return (
     <Panel header="Coupon Promotions">
-      <Form>
+      <Form onSubmit={handleSearch}>
         <FormGroup>
           <Input
             placeholder="Search by coupon code"
@@ -187,7 +187,7 @@ const Index = () => {
             onChange={(e) => setCouponCode(e.target.value)}
           />
         </FormGroup>
-        <Button variant="secondary" iconLeft={<SearchIcon />} onClick={handleSearch} isLoading={loading}>
+        <Button type="submit" variant="secondary" iconLeft={<SearchIcon />} isLoading={loading}>
           Search
         </Button>
       </Form>
