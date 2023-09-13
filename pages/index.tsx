@@ -21,6 +21,7 @@ import ErrorMessage from '../components/error';
 import Loading from '../components/loading';
 import { useSession } from '../context/session'
 import { usePromotions } from '../lib/hooks';
+import { useCouponSearch } from '../lib/hooks';
 
 const Index = () => {
   const encodedContext = useSession()?.context;
@@ -29,6 +30,7 @@ const Index = () => {
   const [columnHash, setColumnHash] = useState('');
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
   const [couponCode, setCouponCode] = useState('');
+  const { list, error, isLoading } = useCouponSearch(couponCode);
   const [loading, setLoading] = useState(false);
   const alertsManager = createAlertsManager();
   
@@ -83,46 +85,52 @@ const Index = () => {
 
   const renderCurrencyCode = (currency_code: string): ReactElement => <Text bold>{currency_code}</Text>;
 
-  const handleSearch = async () => {
-    setLoading(true);
-    try {
-        if (!couponCode.trim()) {
-            return; // Prevent empty searches
-        }
+  const handleSearch = (event) => {
+    event.preventDefault();
+    // Assuming your input's name is 'code'
+    setCouponCode(event.target.code.value);
+  }
+  
+  // const handleSearch = async () => {
+  //   setLoading(true);
+  //   try {
+  //       if (!couponCode.trim()) {
+  //           return; // Prevent empty searches
+  //       }
 
-        const params = new URLSearchParams({
-            code: couponCode,
-            context: encodedContext
-        }).toString();
+  //       const params = new URLSearchParams({
+  //           code: couponCode,
+  //           context: encodedContext
+  //       }).toString();
 
-        const url = `/api/promotions?${params}`;
-        const res = await fetch(url);
-        const { data } = await res.json();
+  //       const url = `/api/promotions?${params}`;
+  //       const res = await fetch(url);
+  //       const { data } = await res.json();
 
-        if (data.length === 0) {
-            const alert = {
-                type: 'warning',
-                header: 'No results',
-                messages: [{ text: `No results for ${couponCode}` }],
-                autoDismiss: true,
-            } as AlertProps;
-            alertsManager.add(alert);
-        }
+  //       if (data.length === 0) {
+  //           const alert = {
+  //               type: 'warning',
+  //               header: 'No results',
+  //               messages: [{ text: `No results for ${couponCode}` }],
+  //               autoDismiss: true,
+  //           } as AlertProps;
+  //           alertsManager.add(alert);
+  //       }
 
-        // Update your table data or state with the search results
+  //       // Update your table data or state with the search results
     
-      } catch (error) {
-          console.error(error);
-          const alert = {
-              type: 'error',
-              header: 'Error searching coupon code',
-              messages: [{ text: error.message }],
-              autoDismiss: true,
-          } as AlertProps;
-          alertsManager.add(alert);
-      }
-      setLoading(false);
-  };
+  //     } catch (error) {
+  //         console.error(error);
+  //         const alert = {
+  //             type: 'error',
+  //             header: 'Error searching coupon code',
+  //             messages: [{ text: error.message }],
+  //             autoDismiss: true,
+  //         } as AlertProps;
+  //         alertsManager.add(alert);
+  //     }
+  //     setLoading(false);
+  // };
 
 
   if (isLoading) return <Loading />;
@@ -143,6 +151,12 @@ const Index = () => {
           Search
         </Button>
       </Form>
+
+      {/* Handle states and display */}
+      {isLoading && <p>Loading...</p>}
+      {error && <p>Error: {error.message}</p>}
+      {list && list.map(item => <div key={item.id}>{item.name}</div>)}
+      
       <AlertsManager manager={alertsManager} />
       <Table
         columns={[
