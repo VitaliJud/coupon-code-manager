@@ -19,9 +19,11 @@ import { ReactElement, useState } from 'react';
 import { PromotionTableItem } from '@types';
 import ErrorMessage from '../components/error';
 import Loading from '../components/loading';
+import { useSession } from '../context/session'
 import { usePromotions } from '../lib/hooks';
 
 const Index = () => {
+  const encodedContext = useSession()?.context;
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [columnHash, setColumnHash] = useState('');
@@ -88,7 +90,7 @@ const Index = () => {
         return; // Prevent empty searches
       }
 
-      const url = `/api/promotions?code=${couponCode}`;
+      const url = `/api/promotions?code=${couponCode}&context=${encodedContext}`;
       const res = await fetch(url);
       const { data } = await res.json();
 
