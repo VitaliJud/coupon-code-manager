@@ -32,10 +32,10 @@ export const CouponModal = () => {
     >
       <Box>
         <Text>To get started -</Text>
-        <Box marginVertical="large" display="flex" justifyContent="center">
+        <Box style={{ margin: '20px 0', display: 'flex', justifyContent: 'center' }}>
           <Form.Link onClick={handleDownload}>Download Template</Form.Link>
         </Box>
-        <Box marginVertical="large" display="flex" justifyContent="center">
+        <Box style={{ margin: '20px 0', display: 'flex', justifyContent: 'center' }}>
           <Form.Link onClick={handleUpload}>Upload CSV</Form.Link>
         </Box>
       </Box>
