@@ -101,7 +101,7 @@ const Index = () => {
         const params = new URLSearchParams({ code: couponCode, context: useSession()?.context });
         const url = `/api/promotions?${params.toString()}`;
     
-        const response = await fetcher(url);
+        const response = await fetch(url);
         
         if (!response.data || response.data.length === 0) {
           const alert = {
