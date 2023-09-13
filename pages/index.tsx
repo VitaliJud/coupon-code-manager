@@ -112,10 +112,10 @@ const Index = () => {
             autoDismiss: true,
           } as AlertProps;
           alertsManager.add(alert);
+          return
         } else {
           // Update your table data or state with the search results
-          // For example:
-          setSearchList(response.data);
+          setSearchList(data);   // Using the parsed data, not response.data
         }
       } catch (error) {
           console.error(error);
