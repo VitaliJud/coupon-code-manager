@@ -84,6 +84,8 @@ const Index = () => {
 
   const renderCurrencyCode = (currency_code: string): ReactElement => <Text bold>{currency_code}</Text>;
 
+  const { context } = useSession();
+  
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -95,10 +97,11 @@ const Index = () => {
 
         if (!code.trim()) {
             setLoading(false);
-            return; // Prevent empty searches
+            
+          return; // Prevent empty searches
         }
 
-        const params = new URLSearchParams({ code: couponCode, context: useSession()?.context });
+        const params = new URLSearchParams({ code: couponCode, context });
         const url = `/api/promotions?${params.toString()}`;
     
         const response = await fetch(url);
@@ -112,6 +115,7 @@ const Index = () => {
             autoDismiss: true,
           } as AlertProps;
           alertsManager.add(alert);
+          
           return
         } else {
           // Update your table data or state with the search results
@@ -195,7 +199,7 @@ const Index = () => {
       {/* Handle states and display */}
       {isLoading && <p>Loading...</p>}
       {error && <p>Error: {error.message}</p>}
-      {list && list.map(item => <div key={item.id}>{item.name}</div>)}
+      {searchList && searchList.map(item => <div key={item.id}>{item.name}</div>)}
       
       <AlertsManager manager={alertsManager} />
       <Table
