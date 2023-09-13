@@ -30,7 +30,7 @@ const Index = () => {
   const [columnHash, setColumnHash] = useState('');
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
   const [couponCode, setCouponCode] = useState('');
-  const { list, error, isLoading } = useCouponSearch(couponCode);
+  const { list: searchList, error, isLoading } = useCouponSearch(couponCode);
   const [loading, setLoading] = useState(false);
   const alertsManager = createAlertsManager();
   
@@ -155,7 +155,7 @@ const Index = () => {
       {/* Handle states and display */}
       {isLoading && <p>Loading...</p>}
       {error && <p>Error: {error.message}</p>}
-      {list && list.map(item => <div key={item.id}>{item.name}</div>)}
+      {searchList && searchList.map(item => <div key={item.id}>{item.name}</div>)}
       
       <AlertsManager manager={alertsManager} />
       <Table
