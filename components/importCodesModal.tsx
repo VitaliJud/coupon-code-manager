@@ -1,11 +1,12 @@
 import { Box, Form, FormGroup, Input, Modal, Text } from '@bigcommerce/big-design';
 import { ReactElement } from 'react';
 
-interface CouponModalProps {
+interface importCodesModalProps {
+    promotionId: number;
     onClose: () => void;
 }
 
-const CouponModal = ({ onClose }: CouponModalProps): ReactElement => {
+const ImportCodesModal = ({ promotionId, onClose }: importCodesModalProps): ReactElement => {
     const handleDownload = () => {
         window.open("https://store-vx1nrciuac.mybigcommerce.com/content/coupon-codes-import-template.csv", "_blank");
     }
@@ -46,4 +47,4 @@ const CouponModal = ({ onClose }: CouponModalProps): ReactElement => {
     );
 }
 
-export default CouponModal;
+export default ImportCodesModal;
