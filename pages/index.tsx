@@ -19,6 +19,7 @@ import { ReactElement, useState } from 'react';
 import { PromotionTableItem } from '@types';
 import ErrorMessage from '../components/error';
 import Loading from '../components/loading';
+import { useSession } from '../context/session';
 import { usePromotions } from '../lib/hooks';
 
 const Index = () => {
