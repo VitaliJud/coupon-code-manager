@@ -19,18 +19,16 @@ import { ReactElement, useState } from 'react';
 import { PromotionTableItem } from '@types';
 import ErrorMessage from '../components/error';
 import Loading from '../components/loading';
-import { useSession } from '../context/session'
 import { usePromotions } from '../lib/hooks';
-import { useCouponSearch } from '../lib/hooks';
 
 const Index = () => {
-  const encodedContext = useSession()?.context;
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [columnHash, setColumnHash] = useState('');
+  const [searchList, setSearchList] = useState([]);
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
   const [couponCode, setCouponCode] = useState('');
-  const { list: searchList, error: searchError, isLoading: searchIsLoading } = useCouponSearch(couponCode);
+  // const { list: searchList, error: searchError, isLoading: searchIsLoading } = useCouponSearch(couponCode);
   const [loading, setLoading] = useState(false);
   const alertsManager = createAlertsManager();
   
@@ -85,12 +83,52 @@ const Index = () => {
 
   const renderCurrencyCode = (currency_code: string): ReactElement => <Text bold>{currency_code}</Text>;
 
-  const handleSearch = (event) => {
-    event.preventDefault();
-    // Assuming your input's name is 'code'
-    setCouponCode(event.target.code.value);
-  }
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    try {
+        const formData = new FormData(e.currentTarget);
+        const code = formData.get('code') as string;
+
+        if (!code.trim()) {
+            setLoading(false);
+            return; // Prevent empty searches
+        }
+
+        const params = new URLSearchParams({ code: couponCode, context: useSession()?.context });
+        const url = `/api/promotions?${params.toString()}`;
+    
+        const response = await fetcher(url);
+        
+        if (!response.data || response.data.length === 0) {
+          const alert = {
+            type: 'warning',
+            header: 'No results',
+            messages: [{ text: `No results for ${code}` }],
+            autoDismiss: true,
+          } as AlertProps;
+          alertsManager.add(alert);
+        } else {
+          // Update your table data or state with the search results
+          // For example:
+          setSearchList(response.data);
+        }
+      } catch (error) {
+          console.error(error);
+          const alert = {
+              type: 'error',
+              header: 'Error searching coupon code',
+              messages: [{ text: error.message }],
+              autoDismiss: true,
+          } as AlertProps;
+          alertsManager.add(alert);
+      }
   
+      setLoading(false);
+  };
+
   // const handleSearch = async () => {
   //   setLoading(true);
   //   try {
