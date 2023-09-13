@@ -30,7 +30,7 @@ const Index = () => {
   const [columnHash, setColumnHash] = useState('');
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
   const [couponCode, setCouponCode] = useState('');
-  const { list: searchList, error, isLoading } = useCouponSearch(couponCode);
+  const { list: searchList, error: searchError, isLoading: searchIsLoading } = useCouponSearch(couponCode);
   const [loading, setLoading] = useState(false);
   const alertsManager = createAlertsManager();
   
@@ -153,8 +153,8 @@ const Index = () => {
       </Form>
 
       {/* Handle states and display */}
-      {isLoading && <p>Loading...</p>}
-      {error && <p>Error: {error.message}</p>}
+      {searchIsLoading && <p>Loading...</p>}
+      {searchError && <p>Error: {searchError.message}</p>}
       {searchList && searchList.map(item => <div key={item.id}>{item.name}</div>)}
       
       <AlertsManager manager={alertsManager} />
