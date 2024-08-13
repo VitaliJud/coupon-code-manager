@@ -78,6 +78,7 @@ const Index = () => {
     try {
       if (!couponCode.trim()) {
         setLoading(false);
+        
         return; // Prevent empty searches
       }
 

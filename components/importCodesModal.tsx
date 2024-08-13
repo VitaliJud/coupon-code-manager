@@ -9,7 +9,7 @@ const ImportCodesModal = ({ onClose }: ImportCodesModalProps) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [abortController] = useState(new AbortController());
     
-    const handleFileChange = (event) => {
+    const handleFileChange = () => {
         // Handle file change logic here
     };
     
