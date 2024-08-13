@@ -15,7 +15,7 @@ import {
 } from '@bigcommerce/big-design';
 import { SearchIcon } from "@bigcommerce/big-design-icons"
 import Link from 'next/link';
-import { ReactElement, useState } from 'react';
+import { ReactElement, useState, useEffect } from 'react';
 import { PromotionTableItem } from '@types';
 import ErrorMessage from '../components/error';
 import Loading from '../components/loading';
@@ -28,6 +28,7 @@ const Index = () => {
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
   const [couponCode, setCouponCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [tableItems, setTableItems] = useState<PromotionTableItem[]>([]);
   const alertsManager = createAlertsManager();
 
   const { error, isLoading, list = [], meta = {} } = usePromotions({
@@ -36,20 +37,11 @@ const Index = () => {
     ...(columnHash && { sort: columnHash, direction: direction.toLowerCase() }),
   });
 
-  const itemsPerPageOptions = [10, 20, 50, 100, 250];
+  useEffect(() => {
+    setTableItems(list);
+  }, [list]);
 
-  const tableItems: PromotionTableItem[] = list.map(
-    ({ id, name, current_uses, max_uses, status, start_date, end_date, currency_code }) => ({
-      id,
-      name,
-      current_uses,
-      max_uses,
-      status,
-      start_date,
-      end_date,
-      currency_code,
-    })
-  );
+  const itemsPerPageOptions = [10, 20, 50, 100, 250];
 
   const onItemsPerPageChange = (newRange) => {
     setCurrentPage(1);
@@ -85,6 +77,7 @@ const Index = () => {
     setLoading(true);
     try {
       if (!couponCode.trim()) {
+        setLoading(false);
         return; // Prevent empty searches
       }
 
@@ -100,10 +93,9 @@ const Index = () => {
           autoDismiss: true,
         } as AlertProps;
         alertsManager.add(alert);
+      } else {
+        setTableItems(data);
       }
-
-      // Update your table data or state with the search results
-
     } catch (error) {
       console.error(error);
       const alert = {
@@ -114,10 +106,12 @@ const Index = () => {
       } as AlertProps;
       alertsManager.add(alert);
     }
+
     setLoading(false);
   };
 
   if (isLoading) return <Loading />;
+
   if (error) return <ErrorMessage error={error} />;
 
   return (
