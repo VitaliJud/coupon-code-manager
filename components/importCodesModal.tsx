@@ -10,7 +10,6 @@ const ImportCodesModal = ({ onClose }: ImportCodesModalProps) => {
     const [abortController] = useState(new AbortController());
     
     const handleFileChange = (event) => {
-        const selectedFile = event.target.files[0];
         // Handle file change logic here
     };
     
