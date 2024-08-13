@@ -11,7 +11,7 @@ const ImportCodesModal = ({ onClose }: ImportCodesModalProps) => {
     // const encodedContext = useSession()?.context;    // Will need to be used when parsing is happening and codes need to be created
     const [currentStep, setCurrentStep] = useState(0);
     // const [uploading, setUploading] = useState(false);    // Need to include CSV Parse such as PapaParse
-    const [abortController, setAbortController] = useState(null)
+    const [abortController, setAbortController] = useState(new AbortController());
     const [file, setFile] = useState(null);
     const [error, setError] = useState(null);
     
@@ -53,13 +53,13 @@ const ImportCodesModal = ({ onClose }: ImportCodesModalProps) => {
     // }
     
     const handleClose = () => {
-      AbortController.abort()
-      onClose()
+      abortController.abort();
+      onClose();
     }
     
     const handleStop = () => {
-      abortController.abort()
-      setCurrentStep(1)
+      abortController.abort();
+      setCurrentStep(1);
     }
     
     const renderActions = (): ModalAction[] => {
