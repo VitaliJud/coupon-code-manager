@@ -13,6 +13,8 @@ export default async function promotions(req: NextApiRequest, res: NextApiRespon
             const { page, limit, sort, direction, code } = req.query;
             const params = new URLSearchParams({ page, limit, ...(sort && { sort, direction }), redemption_type: PromotionRedemptionType.coupon, ...(code && { code }) }).toString();
 
+            console.log('Request parameters:', params); // Log the request parameters for debugging
+
             const response = await bigcommerce.get(`/promotions?${params}`);
             res.status(200).json(response);
         } catch (error) {
