@@ -7,13 +7,11 @@ interface ImportCodesModalProps {
 
 const ImportCodesModal = ({ onClose }: ImportCodesModalProps) => {
     const [currentStep, setCurrentStep] = useState(0);
-    const [abortController, setAbortController] = useState(new AbortController());
-    const [file, setFile] = useState(null);
-    const [error, setError] = useState(null);
+    const [abortController] = useState(new AbortController());
     
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
-        setFile(selectedFile);
+        // Handle file change logic here
     };
     
     const handleClose = () => {
@@ -73,7 +71,6 @@ const ImportCodesModal = ({ onClose }: ImportCodesModalProps) => {
                             >
                                 Download Codes Template
                             </Button>
-                            {error && <Text color="danger">{error}</Text>}
                         </Box>
                     </>
                 );
