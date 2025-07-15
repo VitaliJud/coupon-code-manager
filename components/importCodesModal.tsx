@@ -16,12 +16,16 @@ const ImportCodesModal = ({ promotionId, onClose }: ImportCodesModalProps) => {
     
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        if (!file) return;
+        if (!file) {
+            return;
+        }
 
         const text = await file.text();
         const lines = text.split(/\r?\n/).filter(Boolean);
 
-        if (lines.length <= 1) return;
+        if (lines.length <= 1) {
+            return;
+        }
 
         const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
         const codeIdx = headers.indexOf('code');

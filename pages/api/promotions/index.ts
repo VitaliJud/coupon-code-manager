@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import pino from 'pino';
+import Pino from 'pino';
 import { URLSearchParams } from "url";
 import { bigcommerceClient, getSession } from "@lib/auth";
 import { PromotionRedemptionType } from "@types";
 
-const logger = pino({
+const logger = Pino({
     transport: {
         target: 'pino-pretty',
         options: { destination: 1 }
