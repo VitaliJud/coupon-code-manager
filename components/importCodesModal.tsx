@@ -34,6 +34,7 @@ const ImportCodesModal = ({ promotionId, onClose }: ImportCodesModalProps) => {
 
         const records = lines.slice(1).map(line => {
             const cols = line.split(',');
+
             return {
                 code: cols[codeIdx]?.trim(),
                 max_uses: Number(cols[maxUsesIdx]) || 0,
