@@ -26,7 +26,7 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [columnHash, setColumnHash] = useState('');
   const [direction, setDirection] = useState<TableSortDirection>('ASC');
-  const [couponCode, setCouponCode] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [tableItems, setTableItems] = useState<PromotionTableItem[]>([]);
   const alertsManager = createAlertsManager();
@@ -76,13 +76,13 @@ const Index = () => {
   const handleSearch = async () => {
     setLoading(true);
     try {
-      if (!couponCode.trim()) {
+      if (!searchTerm.trim()) {
         setLoading(false);
-        
+
         return; // Prevent empty searches
       }
 
-      const url = `/api/promotions?code=${couponCode}`;
+      const url = `/api/promotions?search=${encodeURIComponent(searchTerm)}`;
       const res = await fetch(url);
       const { data } = await res.json();
 
@@ -90,7 +90,7 @@ const Index = () => {
         const alert = {
           type: 'warning',
           header: 'No results',
-          messages: [{ text: `No results for ${couponCode}` }],
+          messages: [{ text: `No results for ${searchTerm}` }],
           autoDismiss: true,
         } as AlertProps;
         alertsManager.add(alert);
@@ -101,7 +101,7 @@ const Index = () => {
       console.error(error);
       const alert = {
         type: 'error',
-        header: 'Error searching coupon code',
+        header: 'Error searching promotions',
         messages: [{ text: error.message }],
         autoDismiss: true,
       } as AlertProps;
@@ -120,10 +120,10 @@ const Index = () => {
       <Form>
         <FormGroup>
           <Input
-            placeholder="Search by coupon code"
+            placeholder="Search by code or name"
             type="text"
-            value={couponCode}
-            onChange={(e) => setCouponCode(e.target.value)}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </FormGroup>
         <Button variant="secondary" iconLeft={<SearchIcon />} onClick={handleSearch} isLoading={loading}>

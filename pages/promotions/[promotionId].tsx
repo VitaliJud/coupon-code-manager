@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import React, { ReactElement, useState } from 'react';
 import CodeGeneratorModal from '@components/codeGeneratorModal';
 import ExportCodesModal from '@components/exportCodesModal';
+import ImportCodesModal from '@components/importCodesModal';
 import { CouponListItem } from '@types';
 import ErrorMessage from '../../components/error';
 import Loading from '../../components/loading';
@@ -19,6 +20,7 @@ const Promotion = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [generating, setGenerating] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [importing, setImporting] = useState(false);
   const [selectedCodes, setSelectedCodes] = useState([]);
   const { error, isLoading, list = [], meta = {}, mutateList } = useCodes(promotionId, {
     page: String(currentPage),
@@ -109,6 +111,15 @@ const Promotion = () => {
         />
       )}
       {exporting && <ExportCodesModal promotionId={promotionId} onClose={() => setExporting(false)} />}
+      {importing && (
+        <ImportCodesModal
+          promotionId={promotionId}
+          onClose={() => {
+            setImporting(false);
+            mutateList();
+          }}
+        />
+      )}
       <Flex justifyContent="space-between">
         <Box>
           <Link href="/">
@@ -121,6 +132,9 @@ const Promotion = () => {
           </Button>
           <Button iconLeft={<AddIcon />} onClick={() => setGenerating(true)}>
             Generate Coupons
+          </Button>
+          <Button onClick={() => setImporting(true)}>
+            Import Coupons
           </Button>
           <Button iconLeft={<DeleteIcon />} onClick={handleDeleteSelected}>Delete Selected</Button>
         </Box>
