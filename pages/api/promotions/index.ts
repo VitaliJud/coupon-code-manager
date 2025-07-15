@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import pino from 'pino';
+import Pino from 'pino';
 import { URLSearchParams } from "url";
 import { bigcommerceClient, getSession } from "@lib/auth";
 import { PromotionRedemptionType } from "@types";
 
-const logger = pino({
+const logger = Pino({
     transport: {
         target: 'pino-pretty',
         options: { destination: 1 }
@@ -18,24 +18,32 @@ export default async function promotions(req: NextApiRequest, res: NextApiRespon
         try {
             const { accessToken, storeHash } = await getSession(req);
             const bigcommerce = bigcommerceClient(accessToken, storeHash, 'v3');
-            const { page, limit, sort, direction, code } = req.query;
+            const { page, limit, sort, direction, code, name, search } = req.query;
 
-            // Construct the query parameters
-            const queryParams: any = {
+            const baseParams: any = {
                 page,
                 limit,
                 ...(sort && { sort, direction }),
             };
 
-            // If code is provided, use it for searching
-            if (code) {
-                queryParams.code = code;
-            } else {
-                // If no code is provided, default to coupon type
-                queryParams.redemption_type = PromotionRedemptionType.coupon;
+            const searchTerm = (search || code || name) as string | undefined;
+
+            if (searchTerm) {
+                const codeParams = new URLSearchParams({ ...baseParams, code: searchTerm }).toString();
+                let response = await bigcommerce.get(`/promotions?${codeParams}`);
+
+                if (!response.data?.length) {
+                    const nameParams = new URLSearchParams({ ...baseParams, 'name:like': searchTerm }).toString();
+                    response = await bigcommerce.get(`/promotions?${nameParams}`);
+                }
+
+                return res.status(200).json(response);
             }
 
-            const params = new URLSearchParams(queryParams).toString();
+            const params = new URLSearchParams({
+                ...baseParams,
+                redemption_type: PromotionRedemptionType.coupon,
+            }).toString();
 
             logger.info(`Request parameters: ${params}`);
 

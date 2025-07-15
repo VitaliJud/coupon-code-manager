@@ -1,16 +1,62 @@
-import { Box, Button, Message, Modal, ModalAction, Stepper, Text, } from '@bigcommerce/big-design';
+import { Box, Button, Message, Modal, ModalAction, ProgressBar, Stepper, Text } from '@bigcommerce/big-design';
 import React, { useState } from 'react';
+import { useSession } from '../context/session';
 
 interface ImportCodesModalProps {
-    onClose: () => void
+    promotionId: number;
+    onClose: () => void;
 }
 
-const ImportCodesModal = ({ onClose }: ImportCodesModalProps) => {
+const ImportCodesModal = ({ promotionId, onClose }: ImportCodesModalProps) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [abortController] = useState(new AbortController());
+    const [totalCodes, setTotalCodes] = useState(0);
+    const [imported, setImported] = useState(0);
+    const encodedContext = useSession()?.context;
     
-    const handleFileChange = () => {
-        // Handle file change logic here
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) {
+            return;
+        }
+
+        const text = await file.text();
+        const lines = text.split(/\r?\n/).filter(Boolean);
+
+        if (lines.length <= 1) {
+            return;
+        }
+
+        const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+        const codeIdx = headers.indexOf('code');
+        const maxUsesIdx = headers.indexOf('max_uses');
+        const maxPerIdx = headers.indexOf('max_uses_per_customer');
+
+        const records = lines.slice(1).map(line => {
+            const cols = line.split(',');
+
+            return {
+                code: cols[codeIdx]?.trim(),
+                max_uses: Number(cols[maxUsesIdx]) || 0,
+                max_uses_per_customer: Number(cols[maxPerIdx]) || 0,
+            };
+        }).filter(r => r.code);
+
+        setTotalCodes(records.length);
+        setCurrentStep(0);
+
+        for (const record of records) {
+            if (abortController.signal.aborted) break;
+            await fetch(`/api/promotions/${promotionId}/codes?context=${encodedContext}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(record),
+                signal: abortController.signal,
+            });
+            setImported(prev => prev + 1);
+        }
+
+        setCurrentStep(1);
     };
     
     const handleClose = () => {
@@ -60,17 +106,23 @@ const ImportCodesModal = ({ onClose }: ImportCodesModalProps) => {
                                 type="file"
                                 accept=".csv"
                                 onChange={handleFileChange}
-                                style={{ display: 'none' }}
                             />
                             <Button
+                                marginTop="medium"
                                 variant="primary"
                                 onClick={() => {
-                                    window.open('https://store-vx1nrciuac.mybigcommerce.com/content/coupon-codes-import-template.csv');
+                                    window.open('/coupon-codes-import-template.csv');
                                 }}
                             >
                                 Download Codes Template
                             </Button>
                         </Box>
+                        {totalCodes > 0 && (
+                            <Box marginVertical="medium">
+                                <Text>Imported {imported} of {totalCodes} codes</Text>
+                                <ProgressBar percent={(imported / totalCodes) * 100} />
+                            </Box>
+                        )}
                     </>
                 );
             case 1:

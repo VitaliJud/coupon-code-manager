@@ -5,6 +5,34 @@ This app is provided `as-is` with no guarantees.
 
 -----
 
+## App Overview
+
+Coupon Manager is a Next.js application that integrates with the BigCommerce
+Promotions API.  After installing the app in a store, merchants can view coupon
+promotions, search for specific promotions by coupon code or name, and manage
+coupon codes for a promotion.  Codes can be generated in bulk, imported from a
+CSV template or exported for reporting.
+
+### How it Works
+
+1. During installation or when the app is launched from the BigCommerce control
+   panel the app authenticates the store and creates a signed context token.  The
+   token is required for all subsequent API requests and is stored in the URL
+   query string.
+2. Once authenticated the dashboard loads the list of coupon promotions.  From
+   there a promotion can be opened to view the associated coupon codes.
+3. Codes may be generated directly inside the app, imported from a CSV file or
+   exported as a CSV for external use.
+
+### Importing Codes
+
+Use the "Import Coupons" button on a promotion page to upload a CSV file.  The
+CSV must follow the template provided in the repository under `public` as
+`coupon-codes-import-template.csv`.  At minimum a column named `code` is
+required.  Optional columns `max_uses` and `max_uses_per_customer` may be
+included to set limits per code.
+
+
 # App Installation
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/VitaliJud/coupon-code-manager&env=CLIENT_ID,CLIENT_SECRET,AUTH_CALLBACK,JWT_KEY,FIRE_API_KEY,FIRE_DOMAIN,FIRE_PROJECT_ID,DB_TYPE&envDescription=Doc%20for%20setting%20up%20ENV%20Variable&envLink=https%3A%2F%2Fdeveloper.bigcommerce.com%2Fapi-docs%2Fapps%2Ftutorials%2Fbuild-a-nextjs-sample-app%2Fstep-3-integrate%23set-up-firebase-database&project-name=coupon-code-manager&repository-name=coupon-code-manager)
@@ -47,7 +75,7 @@ To get BigCommerce App running for free using Cloud servers with Vercel and Fire
 
 To get the app running locally, follow these instructions:
 
-1. [Use Node 10+ and NPM 7+](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#checking-your-version-of-npm-and-node-js)
+1. [Use Node 18 and NPM 8+](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#checking-your-version-of-npm-and-node-js)
 2. Install npm packages
     - `npm install`
 3. [Add and start ngrok.](https://www.npmjs.com/package/ngrok#usage) Note: use port 3000 to match Next's server.
@@ -71,4 +99,13 @@ To get the app running locally, follow these instructions:
 11. [Install the app and launch.](https://developer.bigcommerce.com/api-docs/apps/quick-start#install-the-app)
 
 
-[![Deploy](https://store-lorovork97.mybigcommerce.com/content/Vercel%20Deploy.svg)](https://vercel.com/new/clone?repository-url=https://github.com/VitaliJud/coupon-code-manager) 
+[![Deploy](https://store-lorovork97.mybigcommerce.com/content/Vercel%20Deploy.svg)](https://vercel.com/new/clone?repository-url=https://github.com/VitaliJud/coupon-code-manager)
+
+## Authentication and Load Troubleshooting
+
+If the app fails to load inside the BigCommerce control panel it is often due to
+an invalid context token or missing environment variables.  Ensure that
+`CLIENT_ID`, `CLIENT_SECRET` and `AUTH_CALLBACK` are correctly configured in your
+deployment environment.  When launching the app, the `context` query parameter
+must be preserved on all page requests.  Removing it will result in API errors
+and a blank dashboard.
