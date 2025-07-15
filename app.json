@@ -5,7 +5,7 @@
   "keywords": ["Node", "Heroku"],
   "addons": ["cleardb:ignite"],
   "engines": {
-    "node": "14.x"
+    "node": "18.x"
   },
   "env": {
     "CLIENT_ID": {
