@@ -39,6 +39,10 @@ To get BigCommerce App running for free using Cloud servers with Vercel and Fire
     - JWT_KEY - any 32-character, JWT key should be at least 32 random characters (256 bits) for HS256
     - CLIENT_ID - BC App Client ID in Devtools
     - CLIENT_SECRET - BC App Client Secret in Devtools
+    - ACCOUNT_ACCESS_TOKEN - Unified Billing access token
+    - MERCHANT_ACCOUNT_UUID - Merchant account UUID for billing
+    - APPLICATION_ID - Application ID for billing
+    - BILLING_API_URL - Unified Billing GraphQL endpoint
 10. [Install the app and launch.](https://developer.bigcommerce.com/api-docs/apps/quick-start#install-the-app)
 
 -----
